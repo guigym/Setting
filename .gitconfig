@@ -1,0 +1,56 @@
+[user]
+	name = chunbowu
+	email = chunbo.wu@intel.com
+[http]
+	postBuffer = 524288000
+    sslVerify = false
+[core]
+	editor = vim
+    whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+    excludesfile = ~/.gitignore_global #exclude the files type setting
+[color]
+    ui = auto
+[color "branch"]
+    current = yellow bold
+    local = green bold
+    remote = cyan bold
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+[color "status"]
+    added = green bold
+    changed = yellow bold
+    untracked = red bold
+[diff]
+    tool = vimdiff
+[difftool]
+    prompt = false
+# make sure the git user information
+#[includeIf "gitdir:~/work/"]
+#    path = ~/work/.gitconfig
+[commit]
+    template = ~/.gitmessage
+[alias]
+    amend = commit --amend
+    amendf = commit --amend --no-edit
+    br = branch
+    ct = commit
+    co = checkout
+    cp = cherry-pick
+    df = diff
+    ds = diff --staged
+    l = log
+    lg = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+    lp = log --pretty=oneline
+    sa = stash apply
+    sh = show
+    ss = stash save
+    st = status
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22

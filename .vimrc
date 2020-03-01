@@ -110,7 +110,7 @@ endif
 "注：使用utf-8格式后，软件与程序源码、文件路径不能有中文，否则报错
 set encoding=utf-8                                    "gvim内部编码
 set fileencoding=utf-8                                "当前文件编码
-set fileencodings=ucs-bom,utf-8,gbk,cp936,latin-1     "支持打开文件的编码
+set fileencodings=ucs-bom,utf-8,gbk,cp936,gb18030,big5,euc-jp,euc-kr,latin1 "支持打开文件的编码 
 " 文件格式，默认 ffs=dos,unix
 "set fileformat=unix
 set fileformats=dos,unix,mac
@@ -121,10 +121,16 @@ if (g:iswindows && g:isGUI)
     source $VIMRUNTIME/menu.vim
     "解决consle输出乱码
     language messages zh_CN.utf-8
+    " 设置中文帮助
+    " set helplang=cn
     colorscheme desert                                "Gvim配色方案
     set guifont=Lucida_Consola:h12:cANSI              "设置字体:字号（字体名称空格用下划线代替）       
     "快速打开vim配置文件：_vimrc
     nnoremap <leader>e :e ~/_vimrc<cr>
+
+    "个性化状栏（这里提供两种方式，要使用其中一种去掉注释即可，不使用反之）
+    let &statusline=' %t %{&mod?(&ro?"*":"+"):(&ro?"=":" ")} %1*|%* %{&ft==""?"any":&ft} %1*|%* %{&ff} %1*|%* %{(&fenc=="")?&enc:&fenc}%{(&bomb?",BOM":"")} %1*|%* %=%1*|%* 0x%B %1*|%* (%l,%c%V) %1*|%* %L %1*|%* %P'
+    " set statusline=%t\ %1*%m%*\ %1*%r%*\ %2*%h%*%w%=%l%3*/%L(%p%%)%*,%c%V]\ [%b:0x%B]\ [%{&ft==''?'TEXT':toupper(&ft)},%{toupper(&ff)},%{toupper(&fenc!=''?&fenc:&enc)}%{&bomb?',BOM':''}%{&eol?'':',NOEOL'}]
 else
     colorscheme desert                                "vim配色方案
     set fencs=utf-8,gbk,utf-16,utf-32,ucs-bom
@@ -209,12 +215,8 @@ set shortmess=atI                                     "去掉欢迎界面
 "au GUIEnter * simalt ~x                              "窗口启动时自动最大化
 "winpos 1000 20                                         "指定窗口出现的位置，坐标原点在屏幕左上角
 "set lines=42 columns=190                              "指定窗口大小，lines为高度，columns为宽度
-
-
-
-"个性化状栏（这里提供两种方式，要使用其中一种去掉注释即可，不使用反之）
-let &statusline=' %t %{&mod?(&ro?"*":"+"):(&ro?"=":" ")} %1*|%* %{&ft==""?"any":&ft} %1*|%* %{&ff} %1*|%* %{(&fenc=="")?&enc:&fenc}%{(&bomb?",BOM":"")} %1*|%* %=%1*|%* 0x%B %1*|%* (%l,%c%V) %1*|%* %L %1*|%* %P'
-"set statusline=%t\ %1*%m%*\ %1*%r%*\ %2*%h%*%w%=%l%3*/%L(%p%%)%*,%c%V]\ [%b:0x%B]\ [%{&ft==''?'TEXT':toupper(&ft)},%{toupper(&ff)},%{toupper(&fenc!=''?&fenc:&enc)}%{&bomb?',BOM':''}%{&eol?'':',NOEOL'}]
+" 设置为双字宽显示，否则无法完整显示如:☆
+" set ambiwidth=double
 
 "显示/隐藏菜单栏、工具栏、滚动条，可用 Ctrl + F11 切换
 if g:isGUI
@@ -240,7 +242,11 @@ set noswapfile                              "设置无临时文件
 set vb t_vb=                                "关闭提示音
 "set paste                                   "避免上面是注释，下一行还是注释,但是这个与set cindent 相互之间有冲突
 set undodir=~/.undodir                      "将un~ 文件都放在一个folder，可以方便恢复原来文件
-
+" 设置字体 
+set guifont=Powerline_Consolas:h14:cANSI
+" 映射切换buffer的键位
+nnoremap [b :bp<CR>
+nnoremap ]b :bn<CR>
 
 "------------------------------------------------------------------------------
 "<多个 Tap设定>
@@ -863,10 +869,32 @@ let g:indentLine_concealcursor = 'inc'
 let g:indentLine_conceallevel = 2
 " let g:indentLine_setConceal = 0
 "
-"""""""""""""""""""""""""用python定义的pep8标准格式化文件””””””””””””””””””””””””
-"  Plug 'tell-k/vim-autopep8'
-"  autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
+"""""""""""""""""""""""""auto-format"""""""""""""""""""""""""
+"vim 中auto-format 需要安装clang-format,  cygwin 直接安装clang就会附带clang-format
+Plug 'chiel92/vim-autoformat'
+"auto-format
+"auto-format
+"F5自动格式化代码并保存
+noremap <F5> :Autoformat<CR>
+let g:autoformat_verbosemode=1
+map <C-K> :pyf <path-to-this-file>/clang-format.py<cr>
+imap <C-K> <c-o>:pyf <path-to-this-file>/clang-format.py<cr>
 
+"""""""""""""""""""""""""clang-format"""""""""""""""""""""""""
+" Plug 'rhysd/vim-clang-format'
+" let g:clang_format#style_options = {
+"             \ "AccessModifierOffset" : -4,
+"             \ "AllowShortIfStatementsOnASingleLine" : "true",
+"             \ "AlwaysBreakTemplateDeclarations" : "true",
+"             \ "Standard" : "C++11"}
+" " map to <Leader>cf in C++ code
+" autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+" autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" " if you install vim-operator-user
+" autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
+" " Toggle auto formatting:
+" nmap <Leader>C :ClangFormatAutoToggle<CR>
+" autocmd FileType cpp ClangFormatAutoEnable
 """"""""""""""""""""""""""""""""""""""""""""""""""
 ""  对齐
 "  Plug 'junegunn/vim-easy-align'
@@ -875,148 +903,154 @@ let g:indentLine_conceallevel = 2
 "  " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 "  nmap ga <Plug>(EasyAlign)
 
-""""""""""""""""""""""""""""""""""""""""""""""""""
-""自动括号?()[]{}
+"""""""""""""""""""""""""自动括号?()[]{}"""""""""""""""""""""""""
 " 自动补全引号(单引号/双引号/反引号), 括号(()[]{})
 Plug 'tpope/vim-surround'
+"""""""""""""""""""""""""插入时候自动补全"""""""""""""""""""""""""
+Plug 'Raimondi/delimitMate'
+""""""""""""""""""""""""""快速打开大文件"""""""""""""""""""""""""
+Plug 'vim-scripts/LargeFile'
 """"""""""""""""""""""""""""""""""""""""""""""""""
+"需要安装nodejs,cygwin 可以共享windows 安装的node，可用命令node -v 查看版本号
+let g:coc_node_path = "/cygdrive/c/Program Files/nodejs/node.exe"
 Plug 'neoclide/coc.nvim', {'branch': 'release'}"
-" "Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'} 
+"Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'} 
+let g:coc_node_path = '/usr/local/opt/node@10/bin/node'
 " 
-"  TextEdit might fail if hidden is not set.
-"  set hidden
-"  " Some servers have issues with backup files, see #649.
-"  set nobackup
-"  set nowritebackup
-"  " Give more space for displaying messages.
-"  set cmdheight=2
-"  " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-"  " delays and poor user experience.
-"  set updatetime=300
-"  " Don't pass messages to |ins-completion-menu|.
-"  set shortmess+=c
-"  " Always show the signcolumn, otherwise it would shift the text each time
-"  " diagnostics appear/become resolved.
-"  set signcolumn=yes
-"  " Use tab for trigger completion with characters ahead and navigate.
-"  " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-"  " other plugin before putting this into your config.
-"  inoremap <silent><expr> <TAB>
-"        \ pumvisible() ? "\<C-n>" :
-"        \ <SID>check_back_space() ? "\<TAB>" :
-"        \ coc#refresh()
-"  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"  
-"  function! s:check_back_space() abort
-"    let col = col('.') - 1
-"    return !col || getline('.')[col - 1]  =~# '\s'
-"  endfunction
-"  
-"  " Use <c-space> to trigger completion.
-"  inoremap <silent><expr> <c-space> coc#refresh()
-"  
-"  " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-"  " position. Coc only does snippet and additional edit on confirm.
-"  if has('patch8.1.1068')
-"    " Use `complete_info` if your (Neo)Vim version supports it.
-"    inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-"  else
-"    imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"  endif
-"  
-"  " Use `[g` and `]g` to navigate diagnostics
-"  nmap <silent> [g <Plug>(coc-diagnostic-prev)
-"  nmap <silent> ]g <Plug>(coc-diagnostic-next)
-"  
-"  " GoTo code navigation.
-"  nmap <silent> gd <Plug>(coc-definition)
-"  nmap <silent> gy <Plug>(coc-type-definition)
-"  nmap <silent> gi <Plug>(coc-implementation)
-"  nmap <silent> gr <Plug>(coc-references)
-"  
-"  " Use K to show documentation in preview window.
-"  nnoremap <silent> K :call <SID>show_documentation()<CR>
-"  
-"  function! s:show_documentation()
-"    if (index(['vim','help'], &filetype) >= 0)
-"      execute 'h '.expand('<cword>')
-"    else
-"      call CocAction('doHover')
-"    endif
-"  endfunction
-"  
-"  " Highlight the symbol and its references when holding the cursor.
-"  autocmd CursorHold * silent call CocActionAsync('highlight')
-"  
-"  " Symbol renaming.
-"  nmap <leader>rn <Plug>(coc-rename)
-"  
-"  " Formatting selected code.
-"  xmap <leader>f  <Plug>(coc-format-selected)
-"  nmap <leader>f  <Plug>(coc-format-selected)
-"  
-"  augroup mygroup
-"    autocmd!
-"    " Setup formatexpr specified filetype(s).
-"    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-"    " Update signature help on jump placeholder.
-"    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-"  augroup end
-"  
-"  " Applying codeAction to the selected region.
-"  " Example: `<leader>aap` for current paragraph
-"  xmap <leader>a  <Plug>(coc-codeaction-selected)
-"  nmap <leader>a  <Plug>(coc-codeaction-selected)
-"  
-"  " Remap keys for applying codeAction to the current line.
-"  nmap <leader>ac  <Plug>(coc-codeaction)
-"  " Apply AutoFix to problem on the current line.
-"  nmap <leader>qf  <Plug>(coc-fix-current)
-"  
-"  " Introduce function text object
-"  " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-"  xmap if <Plug>(coc-funcobj-i)
-"  xmap af <Plug>(coc-funcobj-a)
-"  omap if <Plug>(coc-funcobj-i)
-"  omap af <Plug>(coc-funcobj-a)
-"  
-"  " Use <TAB> for selections ranges.
-"  " NOTE: Requires 'textDocument/selectionRange' support from the language server.
-"  " coc-tsserver, coc-python are the examples of servers that support it.
-"  nmap <silent> <TAB> <Plug>(coc-range-select)
-"  xmap <silent> <TAB> <Plug>(coc-range-select)
-"  
-"  " Add `:Format` command to format current buffer.
-"  command! -nargs=0 Format :call CocAction('format')
-"  
-"  " Add `:Fold` command to fold current buffer.
-"  command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-"  
-"  " Add `:OR` command for organize imports of the current buffer.
-"  command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-"  
-"  " Add (Neo)Vim's native statusline support.
-"  " NOTE: Please see `:h coc-status` for integrations with external plugins that
-"  " provide custom statusline: lightline.vim, vim-airline.
-"  set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-"  
-"  " Mappings using CoCList:
-"  " Show all diagnostics.
-"  nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-"  " Manage extensions.
-"  nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-"  " Show commands.
-"  nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-"  " Find symbol of current document.
-"  nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-"  " Search workspace symbols.
-"  nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-"  " Do default action for next item.
-"  nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-"  " Do default action for previous item.
-"  nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-"  " Resume latest coc list.
-"  nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" TextEdit might fail if hidden is not set.
+set hidden
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+" Give more space for displaying messages.
+set cmdheight=2
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+if has('patch8.1.1068')
+  " Use `complete_info` if your (Neo)Vim version supports it.
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Introduce function text object
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Use <TAB> for selections ranges.
+" NOTE: Requires 'textDocument/selectionRange' support from the language server.
+" coc-tsserver, coc-python are the examples of servers that support it.
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings using CoCList:
+" Show all diagnostics.
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 """"""""""""""""""""""""
 " Plug 'tacahiroy/ctrlp-funky'
 " nnoremap <Leader>fu :CtrlPFunky<Cr>
@@ -1027,39 +1061,55 @@ if (!g:isGUI)
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
     
-    " Vim 在与屏幕/键盘交互时使用的编码(取决于实际的终端的设定)        
-    set encoding=utf-8
-    set langmenu=zh_CN.UTF-8
-    " 设置打开文件的编码格式  
-    set fileencodings=ucs-bom,utf-8,gbk,cp936,gb18030,big5,euc-jp,euc-kr,latin1 
-    set fileencoding=utf-8
-    " 解决菜单乱码
-    " source $VIMRUNTIME/delmenu.vim
-    " source $VIMRUNTIME/menu.vim
-    " 解决consle输出乱码
-    " set termencoding = cp936  
-    " 设置中文提示
-    language messages zh_CN.utf-8 
-    " 设置中文帮助
-    set helplang=cn
-    " 设置为双字宽显示，否则无法完整显示如:☆
-    set ambiwidth=double
-    " 总是显示状态栏 
-    "set laststatus=2  "永远显示状态栏
-    " let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
-    let g:airline_theme="dark"      " 设置主题
+    let g:airline_theme="dark"      " 设置主题 powerlineish
+    let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
     " 开启tabline
-    let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
-    let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
-    let g:airline#extensions#tabline#left_alt_sep = '|'      "tabline中buffer显示编号
-    let g:airline#extensions#tabline#buffer_nr_show = 1      
-    " 映射切换buffer的键位
-    nnoremap [b :bp<CR>
-    nnoremap ]b :bn<CR>
-    " 设置字体 
-    set guifont=Powerline_Consolas:h14:cANSI
+    " let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
+    " let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
+    " let g:airline#extensions#tabline#left_alt_sep = '|'      "tabline中buffer显示编号
+    " let g:airline#extensions#tabline#buffer_nr_show = 1      
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+    endif
 
-    "Plug 'tpope/vim-fugitive'
+
+    "!!!!! 文件定义在autoload/airline/init.
+    function!AirlineInit()
+        let g:airline_section_a = airline#section#create(['mode',' ','branch'])
+        let g:airline_section_b = airline#section#create_left(['ffenc','%f'])
+        let g:airline_section_c = airline#section#create(['filetype'])
+        let g:airline_section_x = airline#section#create(['%P'])
+        " let g:airline_section_y = airline#section#create(['%B'])
+        "let g:airline_section_z = airline#section#create_right(['%l', '%c'])
+
+
+        let g:airline_left_sep = '▶'
+        let g:airline_left_alt_sep = '❯'
+        let g:airline_right_sep = '◀'
+        let g:airline_right_alt_sep = '❮'
+        let g:airline_symbols.linenr = '¶'
+        let g:airline_symbols.branch = '⎇'
+        "let g:airline_section_b='%{strftime("%c")}'   "使用时显示当前时间
+        "let g:airline_section_y='BN:%{bufnr("%")}'  "右下角显示bffer序号
+    endfunction
+    autocmd VimEnter * call AirlineInit()
+
+    function! AccentDemo()
+      let keys = ['a','b','c','d','e','f','g','h']
+      for k in keys
+        call airline#parts#define_text(k, k)
+      endfor
+      call airline#parts#define_accent('a', 'red')
+      call airline#parts#define_accent('b', 'green')
+      call airline#parts#define_accent('c', 'blue')
+      call airline#parts#define_accent('d', 'yellow')
+      call airline#parts#define_accent('e', 'orange')
+      call airline#parts#define_accent('f', 'purple')
+      call airline#parts#define_accent('g', 'bold')
+      call airline#parts#define_accent('h', 'italic')
+      let g:airline_section_a = airline#section#create(keys)
+    endfunction
+    "autocmd VimEnter * call AccentDemo()
 endif    
 
 

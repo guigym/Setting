@@ -110,7 +110,7 @@ endif
 "注：使用utf-8格式后，软件与程序源码、文件路径不能有中文，否则报错
 set encoding=utf-8                                    "gvim内部编码
 set fileencoding=utf-8                                "当前文件编码
-set fileencodings=ucs-bom,utf-8,gbk,cp936,gb18030,big5,euc-jp,euc-kr,latin1 "支持打开文件的编码 
+set fileencodings=ucs-bom,utf-8,gbk,cp936,gb18030,big5,euc-jp,euc-kr,latin1 "支持打开文件的编码
 " 文件格式，默认 ffs=dos,unix
 "set fileformat=unix
 set fileformats=dos,unix,mac
@@ -124,7 +124,7 @@ if (g:iswindows && g:isGUI)
     " 设置中文帮助
     " set helplang=cn
     colorscheme desert                                "Gvim配色方案
-    set guifont=Lucida_Consola:h12:cANSI              "设置字体:字号（字体名称空格用下划线代替）       
+    set guifont=Lucida_Consola:h12:cANSI              "设置字体:字号（字体名称空格用下划线代替）
     "快速打开vim配置文件：_vimrc
     nnoremap <leader>e :e ~/_vimrc<cr>
 
@@ -144,12 +144,12 @@ set nocompatible                                      "关闭 Vi 兼容模式
 filetype on                                           "启用文件类型侦测
 filetype plugin on                                    "针对不同的文件类型加载对应的插件
 filetype plugin indent on                             "启用缩进
-"below 5 setting from link: https://www.cnblogs.com/jcuan/articles/5765528.html 
-filetype indent on                                     " 自适应不同语言的智能缩进 
-set expandtab                                          " 将制表符扩展为空格 
+"below 5 setting from link: https://www.cnblogs.com/jcuan/articles/5765528.html
+filetype indent on                                     " 自适应不同语言的智能缩进
+set expandtab                                          " 将制表符扩展为空格
 set tabstop=4                                          "设置编辑时制表符占用空格数
-set shiftwidth=4                                       "设置格式化时制表符占用空格数 
-set softtabstop=4                                      "让 vim 把连续数量的空格视为一个制表符 
+set shiftwidth=4                                       "设置格式化时制表符占用空格数
+set softtabstop=4                                      "让 vim 把连续数量的空格视为一个制表符
 
 set expandtab                                         "将tab键转换为空格
 set tabstop=4                                         "设置tab键的宽度
@@ -164,7 +164,7 @@ set smartcase                                         "如果搜索模式包含�
 "set noincsearch                                      "在输入要搜索的文字时，取消实时匹配
 set is                                                "在输入要搜索的文字时，取消实时匹配
 set hlsearch                                          "高亮搜索
-"set cursorcolumn									  "高亮当前列
+"set cursorcolumn                                     "高亮当前列
 set cursorline                                        "突出显示当前行
 set autoread                                          "当文件在外部被修改，自动更新该文件
 "对齐方式
@@ -198,7 +198,7 @@ nmap \m :let @/=expand('<cword>')<cr>
 "常规模式下输入 cs 清除行尾空格
 nmap cs :%s/\s\+$//g<cr>:noh<cr>
 "因为windows的默认编码是GBK，而Linux的默认编码是UTF-8，这样windows的每条完整json数据的结尾是通过回车换行来实现\r\n,而在Linux操作系统中则是通过在每行结尾通过\n来实现的，这样windows的换行符在Linux下就不会被正确识别，导致每条数据之间无法正确分开而出现了在上面描述的在每条json数据后面出现^M的这样。
-"原文链接：https://blog.csdn.net/a532672728/article/details/78976639 
+"原文链接：https://blog.csdn.net/a532672728/article/details/78976639
 "常规模式下输入 cm 清除行尾 ^M 符号
 nmap cm :%s/\r$//g<cr>:noh<cr>
 "每行超过80个的字符用下划线标示
@@ -221,16 +221,16 @@ set shortmess=atI                                     "去掉欢迎界面
 "显示/隐藏菜单栏、工具栏、滚动条，可用 Ctrl + F11 切换
 if g:isGUI
     map <silent> <c-F11> :if &guioptions =~# 'm' <Bar>
-        \set guioptions-=m <Bar>
-        \set guioptions-=T <Bar>
-        \set guioptions-=r <Bar>
-        \set guioptions-=L <Bar>
-    \else <Bar>
-        \set guioptions+=m <Bar>
-        \set guioptions+=T <Bar>
-        \set guioptions+=r <Bar>
-        \set guioptions+=L <Bar>
-    \endif<CR>
+                \set guioptions-=m <Bar>
+                \set guioptions-=T <Bar>
+                \set guioptions-=r <Bar>
+                \set guioptions-=L <Bar>
+                \else <Bar>
+                \set guioptions+=m <Bar>
+                \set guioptions+=T <Bar>
+                \set guioptions+=r <Bar>
+                \set guioptions+=L <Bar>
+                \endif<CR>
 endif
 
 "------------------------------------------------------------------------------
@@ -242,7 +242,7 @@ set noswapfile                              "设置无临时文件
 set vb t_vb=                                "关闭提示音
 "set paste                                   "避免上面是注释，下一行还是注释,但是这个与set cindent 相互之间有冲突
 set undodir=~/.undodir                      "将un~ 文件都放在一个folder，可以方便恢复原来文件
-" 设置字体 
+" 设置字体
 set guifont=Powerline_Consolas:h14:cANSI
 " 映射切换buffer的键位
 nnoremap [b :bp<CR>
@@ -256,47 +256,47 @@ let g:miniBufExplMapWindowNavVim = 1        "用<C-k,j,h,l>切换到上下左右
 let g:miniBufExplMapCTabSwitchBufs = 1      "功能增强（不过好像只有在Windows中才有用）
 
 function! MoveToPrevTab()
-	"there is only one window
-	if tabpagenr('$') == 1 &;&; winnr('$') == 1
-		return
-	endif
-	"preparing new window
-	let l:tab_nr = tabpagenr('$')
-	let l:cur_buf = bufnr('%')
-	if tabpagenr() != 1
-		close!
-		if l:tab_nr == tabpagenr('$')
-			tabprev
-		endif
-		sp
-	else
-		close!
-		exe "0tabnew"
-	endif
-	"opening current buffer in new window
-	exe "b".l:cur_buf
+    "there is only one window
+    if tabpagenr('$') == 1 &;&; winnr('$') == 1
+        return
+    endif
+    "preparing new window
+    let l:tab_nr = tabpagenr('$')
+    let l:cur_buf = bufnr('%')
+    if tabpagenr() != 1
+        close!
+        if l:tab_nr == tabpagenr('$')
+            tabprev
+        endif
+        sp
+    else
+        close!
+        exe "0tabnew"
+    endif
+    "opening current buffer in new window
+    exe "b".l:cur_buf
 endfunc
 
 function! MoveToNextTab()
-	"there is only one window
-	if tabpagenr('$') == 1 &;&; winnr('$') == 1
-		return
-	endif
-	"preparing new window
-	let l:tab_nr = tabpagenr('$')
-	let l:cur_buf = bufnr('%')
-	if tabpagenr() < tab_nr
-		close!
-		if l:tab_nr == tabpagenr('$')
-			tabnext
-		endif
-		sp
-	else
-		close!
-		tabnew
-	endif
-	"opening current buffer in new window
-	exe "b".l:cur_buf
+    "there is only one window
+    if tabpagenr('$') == 1 &;&; winnr('$') == 1
+        return
+    endif
+    "preparing new window
+    let l:tab_nr = tabpagenr('$')
+    let l:cur_buf = bufnr('%')
+    if tabpagenr() < tab_nr
+        close!
+        if l:tab_nr == tabpagenr('$')
+            tabnext
+        endif
+        sp
+    else
+        close!
+        tabnew
+    endif
+    "opening current buffer in new window
+    exe "b".l:cur_buf
 endfunc
 
 nnoremap mt :call MoveToNextTab()<cr>   "mt move to next tab
@@ -336,7 +336,7 @@ au BufRead *.apg set filetype=cpp
 "------------------------------------------------------------------------------
 "对浏览代码非常的方便,可以在函数,变量之间跳转等
 ""set tags=./tags;                            "向上级目录递归查找tags文件（好像只有在Windows下才有用）
-set tags=tags;                              " CB 照着网上改的 
+set tags=tags;                              " CB 照着网上改的
 set autochdir                               " CB 网上学习加的
 map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q<CR>
 """"""""""REMOVE THE ADVANTEST LANGUAGE CONNECT""""""""""
@@ -350,52 +350,52 @@ map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q<CR>
 "全屏后再隐藏菜单栏、工具栏、滚动条效果更好
 
 "------------------------------------------------------------------------------
-" Below setting from link: https://github.com/xqin/gvimfullscreen 
+" Below setting from link: https://github.com/xqin/gvimfullscreen
 "------------------------------------------------------------------------------
 if has('gui_running') && has('libcall')
-	let g:MyVimLib = $VIMRUNTIME.'/gvimfullscreen.dll'
-	function ToggleFullScreen()
-		call libcallnr(g:MyVimLib, "ToggleFullScreen", 0)
-	endfunction
-    
-	"Alt+Enter
-	"map <A-Enter> <Esc>:call ToggleFullScreen()<CR>
+    let g:MyVimLib = $VIMRUNTIME.'/gvimfullscreen.dll'
+    function ToggleFullScreen()
+        call libcallnr(g:MyVimLib, "ToggleFullScreen", 0)
+    endfunction
 
-	let g:VimAlpha = 240
-	function! SetAlpha(alpha)
-		let g:VimAlpha = g:VimAlpha + a:alpha
-		if g:VimAlpha < 180
-			let g:VimAlpha = 180
-		endif
-		if g:VimAlpha > 255
-			let g:VimAlpha = 255
-		endif
-		call libcall(g:MyVimLib, 'SetAlpha', g:VimAlpha)
-	endfunction
-    
-	"Shift+Y
-	nmap <s-y> <Esc>:call SetAlpha(3)<CR>
-	"Shift+T
-	nmap <s-t> <Esc>:call SetAlpha(-3)<CR>
+    "Alt+Enter
+    "map <A-Enter> <Esc>:call ToggleFullScreen()<CR>
 
-	let g:VimTopMost = 0
-	function! SwitchVimTopMostMode()
-		if g:VimTopMost == 0
-			let g:VimTopMost = 1
-		else
-			let g:VimTopMost = 0
-		endif
-		call libcall(g:MyVimLib, 'EnableTopMost', g:VimTopMost)
-	endfunction
-    
-	"Shift+R
-	nmap <s-r> <Esc>:call SwitchVimTopMostMode()<CR>
+    let g:VimAlpha = 240
+    function! SetAlpha(alpha)
+        let g:VimAlpha = g:VimAlpha + a:alpha
+        if g:VimAlpha < 180
+            let g:VimAlpha = 180
+        endif
+        if g:VimAlpha > 255
+            let g:VimAlpha = 255
+        endif
+        call libcall(g:MyVimLib, 'SetAlpha', g:VimAlpha)
+    endfunction
+
+    "Shift+Y
+    nmap <s-y> <Esc>:call SetAlpha(3)<CR>
+    "Shift+T
+    nmap <s-t> <Esc>:call SetAlpha(-3)<CR>
+
+    let g:VimTopMost = 0
+    function! SwitchVimTopMostMode()
+        if g:VimTopMost == 0
+            let g:VimTopMost = 1
+        else
+            let g:VimTopMost = 0
+        endif
+        call libcall(g:MyVimLib, 'EnableTopMost', g:VimTopMost)
+    endfunction
+
+    "Shift+R
+    nmap <s-r> <Esc>:call SwitchVimTopMostMode()<CR>
 endif
 
 if (g:iswindows && g:isGUI)
-   "map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
-   map <A-CR> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
-   imap <A-CR> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+    "map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+    map <A-CR> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+    imap <A-CR> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 endif
 
 "------------------------------------------------------------------------------
@@ -411,138 +411,138 @@ endif
 autocmd BufNewFile *.[ch],*.hpp,*.cpp,Makefile,*.mk,*.sh exec ":call SetTitle()"
 " 加入注释
 func SetComment()
-	call setline(1,"/*================================================================")
-	call append(line("."),   "*   Copyright (C) ".strftime("%Y")." INTEL COMPONET Ltd. All rights reserved.")
-	call append(line(".")+1, "*   ")
-	call append(line(".")+2, "*   FILE			：".expand("%:t"))
-	call append(line(".")+3, "*   Author		：Chunbo")
-	call append(line(".")+4, "*   Date			：".strftime("%Y.%m.%d."))
-	call append(line(".")+5, "*   Description	：")
-	call append(line(".")+6, "*")
-	call append(line(".")+7, "================================================================*/")
-	call append(line(".")+8, "")
-	call append(line(".")+9, "")
+    call setline(1,"/*================================================================")
+    call append(line("."),   "*   Copyright (C) ".strftime("%Y")." INTEL COMPONET Ltd. All rights reserved.")
+    call append(line(".")+1, "*   ")
+    call append(line(".")+2, "*   FILE          ：".expand("%:t"))
+    call append(line(".")+3, "*   Author        ：Chunbo")
+    call append(line(".")+4, "*   Date          ：".strftime("%Y.%m.%d."))
+    call append(line(".")+5, "*   Description   ：")
+    call append(line(".")+6, "*")
+    call append(line(".")+7, "================================================================*/")
+    call append(line(".")+8, "")
+    call append(line(".")+9, "")
 endfunc
 " 加入shell,Makefile注释
 func SetComment_sh()
-	call setline(3, "#================================================================")
-	call setline(4, "#   Copyright (C) ".strftime("%Y")." INTEL COMPONET. All rights reserved.")
-	call setline(5, "#   ")
-	call setline(6, "#   FILE       ：".expand("%:t"))
-	call setline(7, "#   Author     ：Chunbo")
-	call setline(8, "#   Date       ：".strftime("%Y年%m月%d日"))
-	call setline(9, "#   Description：")
-	call setline(10, "#")
-	call setline(11, "#================================================================")
-	call setline(12, "")
-	call setline(13, "")
+    call setline(3, "#================================================================")
+    call setline(4, "#   Copyright (C) ".strftime("%Y")." INTEL COMPONET. All rights reserved.")
+    call setline(5, "#   ")
+    call setline(6, "#   FILE       ：".expand("%:t"))
+    call setline(7, "#   Author     ：Chunbo")
+    call setline(8, "#   Date       ：".strftime("%Y年%m月%d日"))
+    call setline(9, "#   Description：")
+    call setline(10, "#")
+    call setline(11, "#================================================================")
+    call setline(12, "")
+    call setline(13, "")
 endfunc
 " 定义函数SetTitle，自动插入文件头
 func SetTitle()
-	if &filetype == 'make'
-		call setline(1,"")
-		call setline(2,"")
-		call SetComment_sh()
+    if &filetype == 'make'
+        call setline(1,"")
+        call setline(2,"")
+        call SetComment_sh()
 
-	elseif &filetype == 'sh'
-		call setline(1,"#!/system/bin/sh")
-		call setline(2,"")
-		call SetComment_sh()
+    elseif &filetype == 'sh'
+        call setline(1,"#!/system/bin/sh")
+        call setline(2,"")
+        call SetComment_sh()
 
-	else
-	     call SetComment()
-	     if expand("%:e") == 'hpp'
-	        call append(line(".")+10, "#ifndef _".toupper(expand("%:t:r"))."_H")
-	        call append(line(".")+11, "#define _".toupper(expand("%:t:r"))."_H")
-	        call append(line(".")+12, "#ifdef __cplusplus")
-	        call append(line(".")+13, "extern \"C\"")
-	        call append(line(".")+14, "{")
-	        call append(line(".")+15, "#endif")
-	        call append(line(".")+16, "")
-	        call append(line(".")+17, "#ifdef __cplusplus")
-	        call append(line(".")+18, "}")
-	        call append(line(".")+19, "#endif")
-	        call append(line(".")+20, "#endif //".toupper(expand("%:t:r"))."_H")
-	     elseif expand("%:e") == 'h'
-	  	    call append(line(".")+10, "#pragma once")
-	     elseif &filetype == 'c'
-	  	    call append(line(".")+10,"#include \"".expand("%:t:r").".h\"")
-	     elseif &filetype == 'cpp'
-	  	    call append(line(".")+10, "#include \"".expand("%:t:r").".h\"")
-	  	    call append(line(".")+11, "#include <iostream>")
-	  	    call append(line(".")+12, "using namespace std;")
-	  	    call append(line(".")+13, "int main()")
-	  	    call append(line(".")+14, "{")
-	  	    call append(line(".")+15, "    return 0;")
-	  	    call append(line(".")+16, "}")
-	     endif
-	endif
+    else
+        call SetComment()
+        if expand("%:e") == 'hpp'
+            call append(line(".")+10, "#ifndef _".toupper(expand("%:t:r"))."_H")
+            call append(line(".")+11, "#define _".toupper(expand("%:t:r"))."_H")
+            call append(line(".")+12, "#ifdef __cplusplus")
+            call append(line(".")+13, "extern \"C\"")
+            call append(line(".")+14, "{")
+            call append(line(".")+15, "#endif")
+            call append(line(".")+16, "")
+            call append(line(".")+17, "#ifdef __cplusplus")
+            call append(line(".")+18, "}")
+            call append(line(".")+19, "#endif")
+            call append(line(".")+20, "#endif //".toupper(expand("%:t:r"))."_H")
+        elseif expand("%:e") == 'h'
+            call append(line(".")+10, "#pragma once")
+        elseif &filetype == 'c'
+            call append(line(".")+10,"#include \"".expand("%:t:r").".h\"")
+        elseif &filetype == 'cpp'
+            call append(line(".")+10, "#include \"".expand("%:t:r").".h\"")
+            call append(line(".")+11, "#include <iostream>")
+            call append(line(".")+12, "using namespace std;")
+            call append(line(".")+13, "int main()")
+            call append(line(".")+14, "{")
+            call append(line(".")+15, "    return 0;")
+            call append(line(".")+16, "}")
+        endif
+    endif
 endfunc
 
 
 
 "map <F4> :call TitleDet()<cr>'s
 function AddTitle()
-        call append(0,"/*=============================================================================")
-        call append(1,"*")
-        call append(2,"* Author: vaptu - vaptu@qq.com")
-        call append(3,"*")
-        call append(4,"* Last modified: ".strftime("%Y-%m-%d %H:%M"))
-        call append(5,"*")
-        call append(6,"* Filename: ".expand("%:t"))
-        call append(7,"*")
-        call append(8,"* Description: ")
-        call append(9,"*")
-        call append(10,"=============================================================================*/")
-        echohl WarningMsg | echo "Successful in adding the copyright." | echohl None
+    call append(0,"/*=============================================================================")
+    call append(1,"*")
+    call append(2,"* Author: vaptu - vaptu@qq.com")
+    call append(3,"*")
+    call append(4,"* Last modified: ".strftime("%Y-%m-%d %H:%M"))
+    call append(5,"*")
+    call append(6,"* Filename: ".expand("%:t"))
+    call append(7,"*")
+    call append(8,"* Description: ")
+    call append(9,"*")
+    call append(10,"=============================================================================*/")
+    echohl WarningMsg | echo "Successful in adding the copyright." | echohl None
 endf
-        "更新最近修改时间和文件名
+"更新最近修改时间和文件名
 function UpdateTitle()
-        normal m'
-        execute '/* *Last modified:/s@:.*$@\=strftime(":\t%Y-%m-%d %H:%M")@'
-        normal ''
-        normal mk
-        execute '/* *Filename:/s@:.*$@\=":\t\t".expand("%:t")@'
-        execute "noh"
-        normal 'k
-        echohl WarningMsg | echo "Successful in updating the copy right." | echohl None
+    normal m'
+    execute '/* *Last modified:/s@:.*$@\=strftime(":\t%Y-%m-%d %H:%M")@'
+    normal ''
+    normal mk
+    execute '/* *Filename:/s@:.*$@\=":\t\t".expand("%:t")@'
+    execute "noh"
+    normal 'k
+    echohl WarningMsg | echo "Successful in updating the copy right." | echohl None
 endfunction
-        "判断前10行代码里面，是否有Last modified这个单词，
-        "如果没有的话，代表没有添加过作者信息，需要新添加；
-        "如果有的话，那么只需要更新即可
+"判断前10行代码里面，是否有Last modified这个单词，
+"如果没有的话，代表没有添加过作者信息，需要新添加；
+"如果有的话，那么只需要更新即可
 function TitleDet()
-        let n=1
-        "默认为添加
-        while n < 10
-            let line = getline(n)
-            if line =~ '^\#\s*\S*Last\smodified:\S*.*$'
-                call UpdateTitle()
-                return
-            endif
+    let n=1
+    "默认为添加
+    while n < 10
+        let line = getline(n)
+        if line =~ '^\#\s*\S*Last\smodified:\S*.*$'
+            call UpdateTitle()
+            return
+        endif
         let n = n + 1
-        endwhile
+    endwhile
 
-        call AddTitle()
+    call AddTitle()
 endfunction
 
 map <F3> :call SetCommentEveryPlace()<cr>'s
 func SetCommentEveryPlace()
     call append(line(".")  , '/*================================ comment start ========================================')
     call append(line(".")+1, '*  Author :Chunbo')
-	call append(line(".")+2, "*  Date   :".strftime("%Y.%m.%d."))
+    call append(line(".")+2, "*  Date   :".strftime("%Y.%m.%d."))
     call append(line(".")+3, '*  Descrip:')
     call append(line(".")+4, '*================================= comment end   ======================================*/')
 endfunction
 
 "------------------------------------------------------------------------------
-"大文件打开配置 
+"大文件打开配置
 "文件中，当文件大于1MB，不启动语法高亮在内的一切附加功能
 "原文链接：https://blog.csdn.net/LaineGates/article/details/78504884
 "------------------------------------------------------------------------------
 " file is large from 1MB
-let g:LargeFile = 500  * 1024 * 1024 
+let g:LargeFile = 500  * 1024 * 1024
 augroup LargeFile
-autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
+    autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
 augroup END
 function LargeFile()
     " no syntax highlighting etc
@@ -564,28 +564,28 @@ endfunction
 "NOT ENABLE YET  " F9 一键保存、编译、连接存并运行
 "NOT ENABLE YET  map <F9> :call Run()<CR>
 "NOT ENABLE YET  imap <F9> <ESC>:call Run()<CR>
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  " Ctrl + F9 一键保存并编译
 "NOT ENABLE YET  map <c-F9> :call Compile()<CR>
 "NOT ENABLE YET  imap <c-F9> <ESC>:call Compile()<CR>
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  " Ctrl + F10 一键保存并连接
 "NOT ENABLE YET  map <c-F10> :call Link()<CR>
 "NOT ENABLE YET  imap <c-F10> <ESC>:call Link()<CR>
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  let s:LastShellReturn_C = 0
 "NOT ENABLE YET  let s:LastShellReturn_L = 0
 "NOT ENABLE YET  let s:ShowWarning = 1
 "NOT ENABLE YET  let s:Obj_Extension = '.o'
 "NOT ENABLE YET  let s:Exe_Extension = '.exe'
 "NOT ENABLE YET  let s:Sou_Error = 0
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  let s:windows_CFlags = 'gcc\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
 "NOT ENABLE YET  let s:linux_CFlags = 'gcc\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  let s:windows_CPPFlags = 'g++\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
 "NOT ENABLE YET  let s:linux_CPPFlags = 'g++\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  func! Compile()
 "NOT ENABLE YET      exe ":ccl"
 "NOT ENABLE YET      exe ":update"
@@ -645,7 +645,7 @@ endfunction
 "NOT ENABLE YET      endif
 "NOT ENABLE YET      exe ":setlocal makeprg=make"
 "NOT ENABLE YET  endfunc
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  func! Link()
 "NOT ENABLE YET      call Compile()
 "NOT ENABLE YET      if s:Sou_Error || s:LastShellReturn_C != 0
@@ -662,7 +662,7 @@ endfunction
 "NOT ENABLE YET          let Exe_Name = expand("%:p:t:r")
 "NOT ENABLE YET      endif
 "NOT ENABLE YET      let v:statusmsg = ''
-"NOT ENABLE YET  	if filereadable(Obj) && (getftime(Obj) >= getftime(Sou))
+"NOT ENABLE YET     if filereadable(Obj) && (getftime(Obj) >= getftime(Sou))
 "NOT ENABLE YET          redraw!
 "NOT ENABLE YET          if !executable(Exe) || (executable(Exe) && getftime(Exe) < getftime(Obj))
 "NOT ENABLE YET              if expand("%:e") == "c"
@@ -701,7 +701,7 @@ endfunction
 "NOT ENABLE YET      endif
 "NOT ENABLE YET      setlocal makeprg=make
 "NOT ENABLE YET  endfunc
-"NOT ENABLE YET  
+"NOT ENABLE YET
 "NOT ENABLE YET  func! Run()
 "NOT ENABLE YET      let s:ShowWarning = 0
 "NOT ENABLE YET      call Link()
@@ -732,12 +732,12 @@ endfunction
 "NOT ENABLE YET          echohl WarningMsg | echo " running finish"
 "NOT ENABLE YET      endif
 "NOT ENABLE YET  endfunc
-"NOT ENABLE YET  
+"NOT ENABLE YET
 
 "==============================插件安装===============================
 call plug#begin('~/.vim/plugged')
 """""""""""""""""""""""""vim-bookmark"""""""""""""""""""""""""
-"https://blog.csdn.net/MDL13412/article/details/44081509 
+"https://blog.csdn.net/MDL13412/article/details/44081509
 Plug 'MattesGroeger/vim-bookmarks'
 nmap <Leader><Leader> <Plug>BookmarkToggle
 nmap <Leader>i <Plug>BookmarkAnnotate
@@ -760,7 +760,7 @@ let g:bookmark_no_default_key_mappings = 1
 let g:bookmark_center = 1
 "!!!!!!!!!!!Below information MUST!! put in the colorscheme files!!!!!
 "!!!!!!!!!!!Below just for references
-highlight BookmarkLine ctermbg=DarkGray ctermfg=none guibg=darkgreen  guifg=palegreen  
+highlight BookmarkLine ctermbg=DarkGray ctermfg=none guibg=darkgreen  guifg=palegreen
 
 """"""""""""""""""nerdtree""""""""""""""""""""""""""""""""
 ""文件管理器
@@ -790,16 +790,16 @@ let g:NERDTreeChDirMode = 2  "Change current folder as root
 " add the file status base on git
 Plug 'Xuyuanp/nerdtree-git-plugin'
 let g:NERDTreeIndicatorMapCustom = {
-			\ "Modified"  : "✹",
-			\ "Staged"    : "✚",
-			\ "Untracked" : "✭",
-			\ "Renamed"   : "➜",
-			\ "Unmerged"  : "═",
-			\ "Deleted"   : "✖",
-			\ "Dirty"     : "✗",
-			\ "Clean"     : "✔︎",
-			\ "Unknown"   : "?"
-			\ }
+            \ "Modified"  : "✹",
+            \ "Staged"    : "✚",
+            \ "Untracked" : "✭",
+            \ "Renamed"   : "➜",
+            \ "Unmerged"  : "═",
+            \ "Deleted"   : "✖",
+            \ "Dirty"     : "✗",
+            \ "Clean"     : "✔︎",
+            \ "Unknown"   : "?"
+            \ }
 """""""""""""""""""""LIMELIGHT"""""""""""""""""""""""""""""
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/goyo.vim'
@@ -863,8 +863,8 @@ Plug 'Yggdroot/indentLine'
 " Background (Vim, GVim)
 "let g:indentLine_bgcolor_term = 202
 "let g:indentLine_bgcolor_gui = '#FF5F00'
-"let g:indentLine_char_list = ['|', '¦', '┆', '┊'] 
-let g:indentLine_char_list = ['|', '¦'] 
+"let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_char_list = ['|', '¦']
 let g:indentLine_concealcursor = 'inc'
 let g:indentLine_conceallevel = 2
 " let g:indentLine_setConceal = 0
@@ -914,9 +914,9 @@ Plug 'vim-scripts/LargeFile'
 "需要安装nodejs,cygwin 可以共享windows 安装的node，可用命令node -v 查看版本号
 let g:coc_node_path = "/cygdrive/c/Program Files/nodejs/node.exe"
 Plug 'neoclide/coc.nvim', {'branch': 'release'}"
-"Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'} 
+"Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
 let g:coc_node_path = '/usr/local/opt/node@10/bin/node'
-" 
+"
 " TextEdit might fail if hidden is not set.
 set hidden
 " Some servers have issues with backup files, see #649.
@@ -936,14 +936,14 @@ set signcolumn=yes
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
@@ -952,10 +952,10 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 if has('patch8.1.1068')
-  " Use `complete_info` if your (Neo)Vim version supports it.
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+    " Use `complete_info` if your (Neo)Vim version supports it.
+    inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
-  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
 " Use `[g` and `]g` to navigate diagnostics
@@ -972,11 +972,11 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
@@ -990,11 +990,11 @@ xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    autocmd!
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
 " Applying codeAction to the selected region.
@@ -1060,14 +1060,14 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 if (!g:isGUI)
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-    
+
     let g:airline_theme="dark"      " 设置主题 powerlineish
     let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
     " 开启tabline
     " let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
     " let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
     " let g:airline#extensions#tabline#left_alt_sep = '|'      "tabline中buffer显示编号
-    " let g:airline#extensions#tabline#buffer_nr_show = 1      
+    " let g:airline#extensions#tabline#buffer_nr_show = 1
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
     endif
@@ -1095,22 +1095,22 @@ if (!g:isGUI)
     autocmd VimEnter * call AirlineInit()
 
     function! AccentDemo()
-      let keys = ['a','b','c','d','e','f','g','h']
-      for k in keys
-        call airline#parts#define_text(k, k)
-      endfor
-      call airline#parts#define_accent('a', 'red')
-      call airline#parts#define_accent('b', 'green')
-      call airline#parts#define_accent('c', 'blue')
-      call airline#parts#define_accent('d', 'yellow')
-      call airline#parts#define_accent('e', 'orange')
-      call airline#parts#define_accent('f', 'purple')
-      call airline#parts#define_accent('g', 'bold')
-      call airline#parts#define_accent('h', 'italic')
-      let g:airline_section_a = airline#section#create(keys)
+        let keys = ['a','b','c','d','e','f','g','h']
+        for k in keys
+            call airline#parts#define_text(k, k)
+        endfor
+        call airline#parts#define_accent('a', 'red')
+        call airline#parts#define_accent('b', 'green')
+        call airline#parts#define_accent('c', 'blue')
+        call airline#parts#define_accent('d', 'yellow')
+        call airline#parts#define_accent('e', 'orange')
+        call airline#parts#define_accent('f', 'purple')
+        call airline#parts#define_accent('g', 'bold')
+        call airline#parts#define_accent('h', 'italic')
+        let g:airline_section_a = airline#section#create(keys)
     endfunction
     "autocmd VimEnter * call AccentDemo()
-endif    
+endif
 
 
 

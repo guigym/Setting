@@ -72,3 +72,21 @@
   # a history expansion in the line
   #Space: magic-space
 #$endif
+
+#CB: 让bash忽略大小写，而且，能根据输入的命令头按“上“键显示该命令的历史
+#原文链接：https://blog.csdn.net/nyist327/article/details/45079011
+set completion-ignore-case on
+#For single press Tab results for when a partial or no completion is possible
+set show-all-if-ambiguous on
+#For results when no completion is possible
+set show-all-if-unmodified on
+#History completion bound to arrow keys (down, up)
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+#Bash allows to quickly move between words with Ctrl+Left and Ctrl+Right
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word"

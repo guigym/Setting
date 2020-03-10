@@ -1,0 +1,12 @@
+#github server one
+Host github.com
+	Hostname github.com
+	User guigym
+	PreferredAuthentications publickey
+	IdentityFile ~/.ssh/github_rsa
+
+#github server two
+Host bitbucket
+	Hostname nsg-bit.intel.com
+	User chunbowu 
+	IdentityFile ~/.ssh/id_rsa

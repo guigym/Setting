@@ -191,8 +191,8 @@ imap <c-l> <Right>
 "buffer change
 nnoremap <c-n> :bn<cr>
 nnoremap <c-p> :bp<cr>
-"用空格键来开关折叠
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+""用空格键来开关折叠
+"nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 " 按\m 键以后，高亮当前字符，不跳到下一个
 nmap \m :let @/=expand('<cword>')<cr>
 "常规模式下输入 cs 清除行尾空格
@@ -240,8 +240,9 @@ set writebackup                             "保存文件前建立备份，保�
 set nobackup                                "设置无备份文件
 set noswapfile                              "设置无临时文件
 set vb t_vb=                                "关闭提示音
+set undofile 
+set undodir=~/.vim/.undodir                 "将un~ 文件都放在一个folder，可以方便恢复原来文件
 "set paste                                   "避免上面是注释，下一行还是注释,但是这个与set cindent 相互之间有冲突
-set undodir=~/.undodir                      "将un~ 文件都放在一个folder，可以方便恢复原来文件
 " 设置字体
 set guifont=Powerline_Consolas:h14:cANSI
 " 映射切换buffer的键位
@@ -540,199 +541,198 @@ endfunction
 "原文链接：https://blog.csdn.net/LaineGates/article/details/78504884
 "------------------------------------------------------------------------------
 " file is large from 1MB
-let g:LargeFile = 500  * 1024 * 1024
-augroup LargeFile
-    autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
-augroup END
-function LargeFile()
-    " no syntax highlighting etc
-    set eventignore+=FileType
-    " save memory when other file is viewed
-    setlocal bufhidden=unload
-    " is read-only (write with :w new_filename)
-    setlocal buftype=nowrite
-    " no undo possible
-    setlocal undolevels=-1
-    " display message
-    autocmd VimEnter *  echo "The file is larger than " . (g:LargeFile / (1024 * 1024) )  . " MB, suggest to open it with LINUX"
-endfunction
+" let g:LargeFile = 500  * 1024 * 1024
+" augroup LargeFile
+"     autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
+" augroup END
+" function LargeFile()
+"     " no syntax highlighting etc
+"     set eventignore+=FileType
+"     " save memory when other file is viewed
+"     setlocal bufhidden=unload
+"     " is read-only (write with :w new_filename)
+"     setlocal buftype=nowrite
+"     " no undo possible
+"     setlocal undolevels=-1
+"     " display message
+"     autocmd VimEnter *  echo "The file is larger than " . (g:LargeFile / (1024 * 1024) )  . " MB, suggest to open it with LINUX"
+" endfunction
 
 
-"NOT ENABLE YET  "------------------------------------------------------------------------------
-"NOT ENABLE YET  "  < 编译、连接、运行配置 >
-"NOT ENABLE YET  "------------------------------------------------------------------------------
-"NOT ENABLE YET  " F9 一键保存、编译、连接存并运行
-"NOT ENABLE YET  map <F9> :call Run()<CR>
-"NOT ENABLE YET  imap <F9> <ESC>:call Run()<CR>
-"NOT ENABLE YET
-"NOT ENABLE YET  " Ctrl + F9 一键保存并编译
-"NOT ENABLE YET  map <c-F9> :call Compile()<CR>
-"NOT ENABLE YET  imap <c-F9> <ESC>:call Compile()<CR>
-"NOT ENABLE YET
-"NOT ENABLE YET  " Ctrl + F10 一键保存并连接
-"NOT ENABLE YET  map <c-F10> :call Link()<CR>
-"NOT ENABLE YET  imap <c-F10> <ESC>:call Link()<CR>
-"NOT ENABLE YET
-"NOT ENABLE YET  let s:LastShellReturn_C = 0
-"NOT ENABLE YET  let s:LastShellReturn_L = 0
-"NOT ENABLE YET  let s:ShowWarning = 1
-"NOT ENABLE YET  let s:Obj_Extension = '.o'
-"NOT ENABLE YET  let s:Exe_Extension = '.exe'
-"NOT ENABLE YET  let s:Sou_Error = 0
-"NOT ENABLE YET
-"NOT ENABLE YET  let s:windows_CFlags = 'gcc\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"NOT ENABLE YET  let s:linux_CFlags = 'gcc\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"NOT ENABLE YET
-"NOT ENABLE YET  let s:windows_CPPFlags = 'g++\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"NOT ENABLE YET  let s:linux_CPPFlags = 'g++\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"NOT ENABLE YET
-"NOT ENABLE YET  func! Compile()
-"NOT ENABLE YET      exe ":ccl"
-"NOT ENABLE YET      exe ":update"
-"NOT ENABLE YET      if expand("%:e") == "c" || expand("%:e") == "cpp" || expand("%:e") == "cxx"
-"NOT ENABLE YET          let s:Sou_Error = 0
-"NOT ENABLE YET          let s:LastShellReturn_C = 0
-"NOT ENABLE YET          let Sou = expand("%:p")
-"NOT ENABLE YET          let Obj = expand("%:p:r").s:Obj_Extension
-"NOT ENABLE YET          let Obj_Name = expand("%:p:t:r").s:Obj_Extension
-"NOT ENABLE YET          let v:statusmsg = ''
-"NOT ENABLE YET          if !filereadable(Obj) || (filereadable(Obj) && (getftime(Obj) < getftime(Sou)))
-"NOT ENABLE YET              redraw!
-"NOT ENABLE YET              if expand("%:e") == "c"
-"NOT ENABLE YET                  if g:iswindows
-"NOT ENABLE YET                      exe ":setlocal makeprg=".s:windows_CFlags
-"NOT ENABLE YET                  else
-"NOT ENABLE YET                      exe ":setlocal makeprg=".s:linux_CFlags
-"NOT ENABLE YET                  endif
-"NOT ENABLE YET                  echohl WarningMsg | echo " compiling..."
-"NOT ENABLE YET                  silent make
-"NOT ENABLE YET              elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
-"NOT ENABLE YET                  if g:iswindows
-"NOT ENABLE YET                      exe ":setlocal makeprg=".s:windows_CPPFlags
-"NOT ENABLE YET                  else
-"NOT ENABLE YET                      exe ":setlocal makeprg=".s:linux_CPPFlags
-"NOT ENABLE YET                  endif
-"NOT ENABLE YET                  echohl WarningMsg | echo " compiling..."
-"NOT ENABLE YET                  silent make
-"NOT ENABLE YET              endif
-"NOT ENABLE YET              redraw!
-"NOT ENABLE YET              if v:shell_error != 0
-"NOT ENABLE YET                  let s:LastShellReturn_C = v:shell_error
-"NOT ENABLE YET              endif
-"NOT ENABLE YET              if g:iswindows
-"NOT ENABLE YET                  if s:LastShellReturn_C != 0
-"NOT ENABLE YET                      exe ":bo cope"
-"NOT ENABLE YET                      echohl WarningMsg | echo " compilation failed"
-"NOT ENABLE YET                  else
-"NOT ENABLE YET                      if s:ShowWarning
-"NOT ENABLE YET                          exe ":bo cw"
-"NOT ENABLE YET                      endif
-"NOT ENABLE YET                      echohl WarningMsg | echo " compilation successful"
-"NOT ENABLE YET                  endif
-"NOT ENABLE YET              else
-"NOT ENABLE YET                  if empty(v:statusmsg)
-"NOT ENABLE YET                      echohl WarningMsg | echo " compilation successful"
-"NOT ENABLE YET                  else
-"NOT ENABLE YET                      exe ":bo cope"
-"NOT ENABLE YET                  endif
-"NOT ENABLE YET              endif
-"NOT ENABLE YET          else
-"NOT ENABLE YET              echohl WarningMsg | echo ""Obj_Name"is up to date"
-"NOT ENABLE YET          endif
-"NOT ENABLE YET      else
-"NOT ENABLE YET          let s:Sou_Error = 1
-"NOT ENABLE YET          echohl WarningMsg | echo " please choose the correct source file"
-"NOT ENABLE YET      endif
-"NOT ENABLE YET      exe ":setlocal makeprg=make"
-"NOT ENABLE YET  endfunc
-"NOT ENABLE YET
-"NOT ENABLE YET  func! Link()
-"NOT ENABLE YET      call Compile()
-"NOT ENABLE YET      if s:Sou_Error || s:LastShellReturn_C != 0
-"NOT ENABLE YET          return
-"NOT ENABLE YET      endif
-"NOT ENABLE YET      let s:LastShellReturn_L = 0
-"NOT ENABLE YET      let Sou = expand("%:p")
-"NOT ENABLE YET      let Obj = expand("%:p:r").s:Obj_Extension
-"NOT ENABLE YET      if g:iswindows
-"NOT ENABLE YET          let Exe = expand("%:p:r").s:Exe_Extension
-"NOT ENABLE YET          let Exe_Name = expand("%:p:t:r").s:Exe_Extension
-"NOT ENABLE YET      else
-"NOT ENABLE YET          let Exe = expand("%:p:r")
-"NOT ENABLE YET          let Exe_Name = expand("%:p:t:r")
-"NOT ENABLE YET      endif
-"NOT ENABLE YET      let v:statusmsg = ''
-"NOT ENABLE YET     if filereadable(Obj) && (getftime(Obj) >= getftime(Sou))
-"NOT ENABLE YET          redraw!
-"NOT ENABLE YET          if !executable(Exe) || (executable(Exe) && getftime(Exe) < getftime(Obj))
-"NOT ENABLE YET              if expand("%:e") == "c"
-"NOT ENABLE YET                  setlocal makeprg=gcc\ -o\ %<\ %<.o
-"NOT ENABLE YET                  echohl WarningMsg | echo " linking..."
-"NOT ENABLE YET                  silent make
-"NOT ENABLE YET              elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
-"NOT ENABLE YET                  setlocal makeprg=g++\ -o\ %<\ %<.o
-"NOT ENABLE YET                  echohl WarningMsg | echo " linking..."
-"NOT ENABLE YET                  silent make
-"NOT ENABLE YET              endif
-"NOT ENABLE YET              redraw!
-"NOT ENABLE YET              if v:shell_error != 0
-"NOT ENABLE YET                  let s:LastShellReturn_L = v:shell_error
-"NOT ENABLE YET              endif
-"NOT ENABLE YET              if g:iswindows
-"NOT ENABLE YET                  if s:LastShellReturn_L != 0
-"NOT ENABLE YET                      exe ":bo cope"
-"NOT ENABLE YET                      echohl WarningMsg | echo " linking failed"
-"NOT ENABLE YET                  else
-"NOT ENABLE YET                      if s:ShowWarning
-"NOT ENABLE YET                          exe ":bo cw"
-"NOT ENABLE YET                      endif
-"NOT ENABLE YET                      echohl WarningMsg | echo " linking successful"
-"NOT ENABLE YET                  endif
-"NOT ENABLE YET              else
-"NOT ENABLE YET                  if empty(v:statusmsg)
-"NOT ENABLE YET                      echohl WarningMsg | echo " linking successful"
-"NOT ENABLE YET                  else
-"NOT ENABLE YET                      exe ":bo cope"
-"NOT ENABLE YET                  endif
-"NOT ENABLE YET              endif
-"NOT ENABLE YET          else
-"NOT ENABLE YET              echohl WarningMsg | echo ""Exe_Name"is up to date"
-"NOT ENABLE YET          endif
-"NOT ENABLE YET      endif
-"NOT ENABLE YET      setlocal makeprg=make
-"NOT ENABLE YET  endfunc
-"NOT ENABLE YET
-"NOT ENABLE YET  func! Run()
-"NOT ENABLE YET      let s:ShowWarning = 0
-"NOT ENABLE YET      call Link()
-"NOT ENABLE YET      let s:ShowWarning = 1
-"NOT ENABLE YET      if s:Sou_Error || s:LastShellReturn_C != 0 || s:LastShellReturn_L != 0
-"NOT ENABLE YET          return
-"NOT ENABLE YET      endif
-"NOT ENABLE YET      let Sou = expand("%:p")
-"NOT ENABLE YET      let Obj = expand("%:p:r").s:Obj_Extension
-"NOT ENABLE YET      if g:iswindows
-"NOT ENABLE YET          let Exe = expand("%:p:r").s:Exe_Extension
-"NOT ENABLE YET      else
-"NOT ENABLE YET          let Exe = expand("%:p:r")
-"NOT ENABLE YET      endif
-"NOT ENABLE YET      if executable(Exe) && getftime(Exe) >= getftime(Obj) && getftime(Obj) >= getftime(Sou)
-"NOT ENABLE YET          redraw!
-"NOT ENABLE YET          echohl WarningMsg | echo " running..."
-"NOT ENABLE YET          if g:iswindows
-"NOT ENABLE YET              exe ":!%<.exe"
-"NOT ENABLE YET          else
-"NOT ENABLE YET              if g:isGUI
-"NOT ENABLE YET                  exe ":!gnome-terminal -e ./%<"
-"NOT ENABLE YET              else
-"NOT ENABLE YET                  exe ":!./%<"
-"NOT ENABLE YET              endif
-"NOT ENABLE YET          endif
-"NOT ENABLE YET          redraw!
-"NOT ENABLE YET          echohl WarningMsg | echo " running finish"
-"NOT ENABLE YET      endif
-"NOT ENABLE YET  endfunc
-"NOT ENABLE YET
+"------------------------------------------------------------------------------
+"  < 编译、连接、运行配置 >
+"------------------------------------------------------------------------------
+" F9 一键保存、编译、连接存并运行
+map <F9> :call Run()<CR>
+imap <F9> <ESC>:call Run()<CR>
+
+" Ctrl + F9 一键保存并编译
+map <c-F9> :call Compile()<CR>
+imap <c-F9> <ESC>:call Compile()<CR>
+
+" Ctrl + F10 一键保存并连接
+map <c-F10> :call Link()<CR>
+imap <c-F10> <ESC>:call Link()<CR>
+
+let s:LastShellReturn_C = 0
+let s:LastShellReturn_L = 0
+let s:ShowWarning = 1
+let s:Obj_Extension = '.o'
+let s:Exe_Extension = '.exe'
+let s:Sou_Error = 0
+
+let s:windows_CFlags = 'gcc\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+let s:linux_CFlags = 'gcc\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+
+let s:windows_CPPFlags = 'g++\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+let s:linux_CPPFlags = 'g++\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+
+func! Compile()
+    exe ":ccl"
+    exe ":update"
+    if expand("%:e") == "c" || expand("%:e") == "cpp" || expand("%:e") == "cxx"
+        let s:Sou_Error = 0
+        let s:LastShellReturn_C = 0
+        let Sou = expand("%:p")
+        let Obj = expand("%:p:r").s:Obj_Extension
+        let Obj_Name = expand("%:p:t:r").s:Obj_Extension
+        let v:statusmsg = ''
+        if !filereadable(Obj) || (filereadable(Obj) && (getftime(Obj) < getftime(Sou)))
+            redraw!
+            if expand("%:e") == "c"
+                if g:iswindows
+                    exe ":setlocal makeprg=".s:windows_CFlags
+                else
+                    exe ":setlocal makeprg=".s:linux_CFlags
+                endif
+                echohl WarningMsg | echo " compiling..."
+                silent make
+            elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
+                if g:iswindows
+                    exe ":setlocal makeprg=".s:windows_CPPFlags
+                else
+                    exe ":setlocal makeprg=".s:linux_CPPFlags
+                endif
+                echohl WarningMsg | echo " compiling..."
+                silent make
+            endif
+            redraw!
+            if v:shell_error != 0
+                let s:LastShellReturn_C = v:shell_error
+            endif
+            if g:iswindows
+                if s:LastShellReturn_C != 0
+                    exe ":bo cope"
+                    echohl WarningMsg | echo " compilation failed"
+                else
+                    if s:ShowWarning
+                        exe ":bo cw"
+                    endif
+                    echohl WarningMsg | echo " compilation successful"
+                endif
+            else
+                if empty(v:statusmsg)
+                    echohl WarningMsg | echo " compilation successful"
+                else
+                    exe ":bo cope"
+                endif
+            endif
+        else
+            echohl WarningMsg | echo ""Obj_Name"is up to date"
+        endif
+    else
+        let s:Sou_Error = 1
+        echohl WarningMsg | echo " please choose the correct source file"
+    endif
+    exe ":setlocal makeprg=make"
+endfunc
+
+func! Link()
+    call Compile()
+    if s:Sou_Error || s:LastShellReturn_C != 0
+        return
+    endif
+    let s:LastShellReturn_L = 0
+    let Sou = expand("%:p")
+    let Obj = expand("%:p:r").s:Obj_Extension
+    if g:iswindows
+        let Exe = expand("%:p:r").s:Exe_Extension
+        let Exe_Name = expand("%:p:t:r").s:Exe_Extension
+    else
+        let Exe = expand("%:p:r")
+        let Exe_Name = expand("%:p:t:r")
+    endif
+    let v:statusmsg = ''
+   if filereadable(Obj) && (getftime(Obj) >= getftime(Sou))
+        redraw!
+        if !executable(Exe) || (executable(Exe) && getftime(Exe) < getftime(Obj))
+            if expand("%:e") == "c"
+                setlocal makeprg=gcc\ -o\ %<\ %<.o
+                echohl WarningMsg | echo " linking..."
+                silent make
+            elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
+                setlocal makeprg=g++\ -o\ %<\ %<.o
+                echohl WarningMsg | echo " linking..."
+                silent make
+            endif
+            redraw!
+            if v:shell_error != 0
+                let s:LastShellReturn_L = v:shell_error
+            endif
+            if g:iswindows
+                if s:LastShellReturn_L != 0
+                    exe ":bo cope"
+                    echohl WarningMsg | echo " linking failed"
+                else
+                    if s:ShowWarning
+                        exe ":bo cw"
+                    endif
+                    echohl WarningMsg | echo " linking successful"
+                endif
+            else
+                if empty(v:statusmsg)
+                    echohl WarningMsg | echo " linking successful"
+                else
+                    exe ":bo cope"
+                endif
+            endif
+        else
+            echohl WarningMsg | echo ""Exe_Name"is up to date"
+        endif
+    endif
+    setlocal makeprg=make
+endfunc
+
+func! Run()
+    let s:ShowWarning = 0
+    call Link()
+    let s:ShowWarning = 1
+    if s:Sou_Error || s:LastShellReturn_C != 0 || s:LastShellReturn_L != 0
+        return
+    endif
+    let Sou = expand("%:p")
+    let Obj = expand("%:p:r").s:Obj_Extension
+    if g:iswindows
+        let Exe = expand("%:p:r").s:Exe_Extension
+    else
+        let Exe = expand("%:p:r")
+    endif
+    if executable(Exe) && getftime(Exe) >= getftime(Obj) && getftime(Obj) >= getftime(Sou)
+        redraw!
+        echohl WarningMsg | echo " running..."
+        if g:iswindows
+            exe ":!%<.exe"
+        else
+            if g:isGUI
+                exe ":!gnome-terminal -e ./%<"
+            else
+                exe ":!./%<"
+            endif
+        endif
+        redraw!
+        echohl WarningMsg | echo " running finish"
+    endif
+endfunc
 
 "==============================插件安装===============================
 call plug#begin('~/.vim/plugged')
@@ -936,7 +936,7 @@ Plug 'vim-scripts/LargeFile'
 """"""""""""""""""""""""""""""""""""""""""""""""""
 "  "需要安装nodejs,cygwin 可以共享windows 安装的node，可用命令node -v 查看版本号
 "  let g:coc_node_path = "/cygdrive/c/Program Files/nodejs/node.exe"
-Plug 'neoclide/coc.nvim', {'branch': 'release'}"
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}"
 "  "Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
 "  let g:coc_node_path = '/usr/local/opt/node@10/bin/node'
 "  "

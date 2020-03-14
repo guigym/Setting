@@ -14,10 +14,10 @@ function! Sprint()
         endif
     endif
     if (&ft=='c')
-        AsyncRun echo "Running C compiler";  gcc % -o %<; ./%<.exe
+        AsyncRun echo "Running C compiler";  gcc % -o %<; echo ------------RESULT-------------;./%<.exe
     endif
     if (&ft=='cpp')
-        AsyncRun echo "Running C++ compiler"; g++ % -o %<; ./%<.exe
+        AsyncRun echo "Running C++ compiler"; g++ % -o %<; echo ------------RESULT-------------;./%<.exe
     endif
     if (&ft=='python')
         AsyncRun echo "Running python interpreter"; python %

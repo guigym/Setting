@@ -192,7 +192,10 @@ imap <c-l> <Right>
 nnoremap <c-n> :bn<cr>
 nnoremap <c-p> :bp<cr>
 ""用空格键来开关折叠
-"nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+" set foldopen-=search     " dont open folds when I search into thm
+" set foldopen-=undo       " dont open folds when I undo stuff
+
 " 按\m 键以后，高亮当前字符，不跳到下一个
 nmap \m :let @/=expand('<cword>')<cr>
 "常规模式下输入 cs 清除行尾空格
@@ -1084,17 +1087,40 @@ if !exists('g:airline_symbols')
     " let g:airline_symbols.whitespace = 'Ξ'
 endif
 "!!!!! 文件定义在autoload/airline/init.
-function!AirlineInit()
-    let g:airline_section_a = airline#section#create(['mode',' ','branch'])
-    let g:airline_section_b = airline#section#create_left(['ffenc','%f'])
-    let g:airline_section_c = airline#section#create(['filetype'])
-    let g:airline_section_x = airline#section#create(['%P'])
-    let g:airline_section_y = airline#section#create(['%B'])
-    let g:airline_section_z = airline#section#create_right(['%l', '%c'])
-endfunction
-"autocmd VimEnter * call AirlineInit()
-"""""""""""""""""""""""""asyncrun"""""""""""""""""""""""""
+" function!AirlineInit()
+"     let g:airline_section_a = airline#section#create(['mode',' ','branch'])
+"     let g:airline_section_b = airline#section#create_left(['ffenc','%f'])
+"     let g:airline_section_c = airline#section#create(['filetype'])
+"     let g:airline_section_x = airline#section#create(['%P'])
+"     let g:airline_section_y = airline#section#create(['%B'])
+"     let g:airline_section_z = airline#section#create_right(['%l', '%c'])
+" endfunction
+" autocmd VimEnter * call AirlineInit()
+"""""""""""""""""""""""""Asyncrun"""""""""""""""""""""""""
 Plug 'skywind3000/asyncrun.vim'
-
+:let g:asyncrun_open = 8
+"配合airline 显示asyncrun 状态
+function!AirlineInit()
+    let g:asyncrun_status = ''
+    let g:airline_section_error = airline#section#create_right(['%{g:asyncrun_status}'])
+endfunction
+autocmd VimEnter * call AirlineInit()
+"寻找当前下标字符在.h/.c 文件中
+if has('win32') || has('win64')
+    noremap <silent><F3> :AsyncRun! -cwd=<root> findstr /n /s /C:"<C-R><C-W>" 
+            \ "\%CD\%\*.h" "\%CD\%\*.c*" <cr>
+else
+    noremap <silent><F3> :AsyncRun! -cwd=<root> grep -n -s -R <C-R><C-W> 
+            \ --include='*.h' --include='*.c*' '<root>' <cr>
+endif
+command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+"""""""""""""""""""""""""sprint"""""""""""""""""""""""""
+"compile and run the file with Asyncrun cmd,不过写的有点问题
+"我改了，放在setting in git
+if v:version >= 800
+    Plug 'pedsm/sprint'
+endif
+"编译运行当前文件
+map <C-F9> : Sprint<CR>
 call plug#end()
 

@@ -215,28 +215,29 @@ export PS1="\n[\t] \033[0;32m\w \033[0;33m\$(git_branch)\e[m \n\#>\033[0;0m\\\$"
 
 ######################CHUNBO############################
 #[ -x /usr/bin/dircolors ] &&  eval "$(dircolors -b)"
-alias ls='ls -hF --color=auto'                 # classify files in colour
+alias ls='ls -hF --color=tty'                 # classify files in colour
 eval `dircolors -b ~/.dir_colors`
 
-#  LS_COLORS='no=00:di=01;44;4;245:tw=33;01:ow=48;5;235;38;5;33'
-#  LS_COLORS=$LS_COLORS':fi=00:ln=00:pi=00:so=00:bd=00:cd=00:or=00:mi=00:ex=00'
-#  LS_COLORS=$LS_COLORS':*.sh=31:*.sh=31:*.exe=31:*.bat=0;35;1;245:*.com=31'
-#  LS_COLORS=$LS_COLORS':*.h=01;32;3;245:*.hpp=01;32;3;245:*.c=00;32;1;245:*.cpp=00;32;1;245:*.cxx=00;32;1;245:*.json=01;34;1;245:*.pl=01;37:*.py=01;37:*.asc35p=01;36;1;24:*Makefile=05;35;5;245'
-#export LS_COLORS
+LS_COLORS='no=00:di=01;44;4;245:tw=33;01:ow=48;5;235;38;5;33'
+LS_COLORS=$LS_COLORS':fi=00:ln=00:pi=00:so=00:bd=00:cd=00:or=00:mi=00:ex=00'
+LS_COLORS=$LS_COLORS':*.sh=31:*.sh=31:*.exe=31:*.bat=0;35;1;245:*.com=31'
+LS_COLORS=$LS_COLORS':*.h=01;32;3;245:*.hpp=01;32;3;245:*.c=00;32;1;245:*.cpp=00;32;1;245:*.cxx=00;32;1;245:*.json=01;34;1;245:*.pl=01;37:*.py=01;37:*.asc35p=01;36;1;24:*Makefile=05;35;5;245'
+export LS_COLORS
 
 ######################CHUNBO############################
 #更改Terminal 初始路径
-cd /cygdrive/c/Users/chunbowu/Desktop/01WORK/N28A/Test_Program/120s_burn
+cd /cygdrive/c/Users/chunbowu/Desktop/01WORK/
 #更改窗口标题
-PROMPT_COMMAND='set_titlebar "$USER@${HOSTNAME%%.*} "'
-function set_titlebar {
-    case $TERM in
-        *xterm*|ansi|rxvt)
-            printf "\033]0;%s\007" "$*"
-            ;;
-    esac
-}
-
+export PROMPT_COMMAND='echo -ne "\033]0;${USER}:${PWD}\007"'
+# PROMPT_COMMAND='set_titlebar "$USER@${HOSTNAME%%.*} "'
+# function set_titlebar {
+#     case $TERM in
+#         *xterm*|ansi|rxvt)
+#             printf "\033]0;%s\007" "$*"
+#             ;;
+#     esac
+# }
+# 
 
 
 

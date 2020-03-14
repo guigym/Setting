@@ -42,3 +42,7 @@ fi
 # if [ -d "${HOME}/info" ]; then
 #   INFOPATH="${HOME}/info:${INFOPATH}"
 # fi
+
+
+#chunbo： 
+PATH=$PATH:$HOME/bin:$HOME/App

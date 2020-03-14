@@ -444,12 +444,10 @@ func SetTitle()
         call setline(1,"")
         call setline(2,"")
         call SetComment_sh()
-
     elseif &filetype == 'sh'
         call setline(1,"#!/system/bin/sh")
         call setline(2,"")
         call SetComment_sh()
-
     else
         call SetComment()
         if expand("%:e") == 'hpp'
@@ -465,10 +463,14 @@ func SetTitle()
             call append(line(".")+19, "#endif")
             call append(line(".")+20, "#endif //".toupper(expand("%:t:r"))."_H")
         elseif expand("%:e") == 'h'
-            call append(line(".")+10, "#pragma once")
-        elseif &filetype == 'c'
-            call append(line(".")+10,"#include \"".expand("%:t:r").".h\"")
-        elseif &filetype == 'cpp'
+            call append(line(".")+10, "#ifndef _".toupper(expand("%:t:r"))."_H")
+            call append(line(".")+11, "#define _".toupper(expand("%:t:r"))."_H")
+            call append(line(".")+12, "#endif //".toupper(expand("%:t:r"))."_H")
+        elseif expand("%:e") == 'c'
+        "elseif &filetype == 'c'
+            call append(line(".")+10, "#include \"".expand("%:t:r").".h\"")
+        elseif expand("%:e") == 'cpp'
+        "elseif &filetype == 'cpp'
             call append(line(".")+10, "#include \"".expand("%:t:r").".h\"")
             call append(line(".")+11, "#include <iostream>")
             call append(line(".")+12, "using namespace std;")
@@ -557,6 +559,93 @@ endfunction
 "     " display message
 "     autocmd VimEnter *  echo "The file is larger than " . (g:LargeFile / (1024 * 1024) )  . " MB, suggest to open it with LINUX"
 " endfunction
+"NOT ENABLE  
+"NOT ENABLE  
+"NOT ENABLE  func! CompileGcc()
+"NOT ENABLE      exec "w"
+"NOT ENABLE      let compilecmd="!gcc "
+"NOT ENABLE      let compileflag="-o %< "
+"NOT ENABLE      if search("mpi\.h") != 0
+"NOT ENABLE          let compilecmd = "!mpicc "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("glut\.h") != 0
+"NOT ENABLE          let compileflag .= " -lglut -lGLU -lGL "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("cv\.h") != 0
+"NOT ENABLE          let compileflag .= " -lcv -lhighgui -lcvaux "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("omp\.h") != 0
+"NOT ENABLE          let compileflag .= " -fopenmp "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("math\.h") != 0
+"NOT ENABLE          let compileflag .= " -lm "
+"NOT ENABLE      endif
+"NOT ENABLE      exec compilecmd." % ".compileflag
+"NOT ENABLE  endfunc
+"NOT ENABLE  func! CompileGpp()
+"NOT ENABLE      exec "w"
+"NOT ENABLE      let compilecmd="!g++ "
+"NOT ENABLE      let compileflag="-o %< "
+"NOT ENABLE      if search("mpi\.h") != 0
+"NOT ENABLE          let compilecmd = "!mpic++ "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("glut\.h") != 0
+"NOT ENABLE          let compileflag .= " -lglut -lGLU -lGL "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("cv\.h") != 0
+"NOT ENABLE          let compileflag .= " -lcv -lhighgui -lcvaux "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("omp\.h") != 0
+"NOT ENABLE          let compileflag .= " -fopenmp "
+"NOT ENABLE      endif
+"NOT ENABLE      if search("math\.h") != 0
+"NOT ENABLE          let compileflag .= " -lm "
+"NOT ENABLE      endif
+"NOT ENABLE      exec compilecmd." % ".compileflag
+"NOT ENABLE  endfunc
+"NOT ENABLE  
+"NOT ENABLE  func! RunPython()
+"NOT ENABLE          exec "!python %"
+"NOT ENABLE  endfunc
+"NOT ENABLE  func! CompileJava()
+"NOT ENABLE      exec "!javac %"
+"NOT ENABLE  endfunc
+"NOT ENABLE  
+"NOT ENABLE  
+"NOT ENABLE  func! CompileCode()
+"NOT ENABLE          exec "w"
+"NOT ENABLE          if &filetype == "cpp"
+"NOT ENABLE                  exec "call CompileGpp()"
+"NOT ENABLE          elseif &filetype == "c"
+"NOT ENABLE                  exec "call CompileGcc()"
+"NOT ENABLE          elseif &filetype == "python"
+"NOT ENABLE                  exec "call RunPython()"
+"NOT ENABLE          elseif &filetype == "java"
+"NOT ENABLE                  exec "call CompileJava()"
+"NOT ENABLE          endif
+"NOT ENABLE  endfunc
+"NOT ENABLE  
+"NOT ENABLE  func! RunResult()
+"NOT ENABLE          exec "w"
+"NOT ENABLE          if search("mpi\.h") != 0
+"NOT ENABLE              exec "!mpirun -np 4 ./%<"
+"NOT ENABLE          elseif &filetype == "cpp"
+"NOT ENABLE              exec "! ./%<"
+"NOT ENABLE          elseif &filetype == "c"
+"NOT ENABLE              exec "! ./%<"
+"NOT ENABLE          elseif &filetype == "python"
+"NOT ENABLE              exec "call RunPython"
+"NOT ENABLE          elseif &filetype == "java"
+"NOT ENABLE              exec "!java %<"
+"NOT ENABLE          endif
+"NOT ENABLE  endfunc
+"NOT ENABLE  
+"NOT ENABLE  map <F10> :call CompileCode()<CR>
+"NOT ENABLE  imap <F10>:call CompileCode()<CR>
+"NOT ENABLE  vmap <F10>:call CompileCode()<CR>
+"NOT ENABLE  
+"NOT ENABLE  map <F9> :call RunResult()<CR>
+"NOT ENABLE  
 
 
 "------------------------------------------------------------------------------
@@ -583,7 +672,7 @@ let s:Sou_Error = 0
 
 let s:windows_CFlags = 'gcc\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
 let s:linux_CFlags = 'gcc\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-
+""-Wall 是打开警告开关,-O代表默认优化,可选：-O0不优化,-O1低级优化,-O2中级优化,-O3高级优化,-Os代码空间优化.
 let s:windows_CPPFlags = 'g++\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
 let s:linux_CPPFlags = 'g++\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
 
@@ -671,7 +760,8 @@ func! Link()
                 echohl WarningMsg | echo " linking..."
                 silent make
             elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
-                setlocal makeprg=g++\ -o\ %<\ %<.o
+                "setlocal makeprg=g++\ ."cJSON.cpp". -o\ %<\ %<.o
+                setlocal makeprg=g++\ -o\ %<\ %<.o\  cJSON.o
                 echohl WarningMsg | echo " linking..."
                 silent make
             endif
@@ -802,29 +892,29 @@ let g:NERDTreeIndicatorMapCustom = {
             \ "Unknown"   : "?"
             \ }
 """""""""""""""""""""LIMELIGHT"""""""""""""""""""""""""""""
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/goyo.vim'
-" Color name (:help cterm-colors) or ANSI code
-let g:limelight_conceal_ctermfg = 'Gray'
-let g:limelight_conceal_ctermfg = 240
-" Color name (:help gui-colors) or RGB color
-let g:limelight_conceal_guifg = 'DarkGray'
-let g:limelight_conceal_guifg = '#777777'
-" 包含的前后段的数量
-let g:limelight_paragraph_span = 1
-" Set it to -1 not to overrule hlsearch
-let g:limelight_priority = -1
-" Goyo配置
-let g:goyo_width =100
-let g:goyo_height =100
-let g:goyo_linenr = 0
-" 进入goyo模式后自动触发limelight，退出则关闭
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
-" limelight键盘映射
-nmap <silent> <leader>g      :Goyo<CR>
-xmap <silent> <leader>g      :Goyo<CR>
-
+" Plug 'junegunn/limelight.vim'
+" Plug 'junegunn/goyo.vim'
+" " Color name (:help cterm-colors) or ANSI code
+" let g:limelight_conceal_ctermfg = 'Gray'
+" let g:limelight_conceal_ctermfg = 240
+" " Color name (:help gui-colors) or RGB color
+" let g:limelight_conceal_guifg = 'DarkGray'
+" let g:limelight_conceal_guifg = '#777777'
+" " 包含的前后段的数量
+" let g:limelight_paragraph_span = 1
+" " Set it to -1 not to overrule hlsearch
+" let g:limelight_priority = -1
+" " Goyo配置
+" let g:goyo_width =100
+" let g:goyo_height =100
+" let g:goyo_linenr = 0
+" " 进入goyo模式后自动触发limelight，退出则关闭
+" autocmd! User GoyoEnter Limelight
+" autocmd! User GoyoLeave Limelight!
+" " limelight键盘映射
+" nmap <silent> <leader>g      :Goyo<CR>
+" xmap <silent> <leader>g      :Goyo<CR>
+" 
 """""""""""""""""""""""""tagbar"""""""""""""""""""""""""
 Plug 'majutsushi/tagbar'
 
@@ -849,24 +939,42 @@ let Tlist_Auto_Update             = 1    " 自动更新
 
 " <leader>tl 打开 Tlist 窗口，在左侧栏显示
 map <leader>tl :TlistToggle<CR>
-" """"""""""""""""""""""""fzf""""""""""""""""""""""""""
-" Plug 'junegunn/fzf', { 'do': './install --bin' }
-" Plug 'junegunn/fzf.vim'
-" "<Leader>f在当前目录搜索文件
-" nnoremap <silent> <Leader>f :Files<CR>
-" "<Leader>b切换Buffer中的文件
-" nnoremap <silent> <Leader>b :Buffers<CR>
-" "<Leader>p在当前所有加载的Buffer中搜索包含目标词的所有行，:BLines只在当前Buffer中搜索
-" nnoremap <silent> <Leader>p :Lines<CR>
-" "<Leader>h在Vim打开的历史文件中搜索，相当于是在MRU中搜索，:History：命令历史查找
-" nnoremap <silent> <Leader>h :History<CR>
-" "调用Rg进行搜索，包含隐藏文件
-" "command! -bang -nargs=* Rg
-"   " call fzf#vim#grep(
-"   "   'rg --column --line-number --no-heading --color=always --smart-case --hidden '.shellescape(<q-args>), 1,
-"   "   <bang>0 ? fzf#vim#with_preview('up:60%')
-"   "           : fzf#vim#with_preview('right:50%:hidden', '?'),
-"   "   <bang>0)
+""  """"""""""""""""""""""""fzf""""""""""""""""""""""""""
+""  "windows 可以使用powershell 命令行安装(admin):choco install fzf, 不过效果不行，还是用ctrlp
+""  "也可以去下载release 的 windows 版本
+"  Plug 'junegunn/fzf', { 'do': './install --bin' }
+"  Plug 'junegunn/fzf.vim'
+"  "<Leader>ff在当前目录搜索文件
+"  nnoremap <silent> <Leader>ff :Files<CR>
+"  "<Leader>b切换Buffer中的文件
+"  nnoremap <silent> <Leader>b :Buffers<CR>
+"  "<Leader>p在当前所有加载的Buffer中搜索包含目标词的所有行，:BLines只在当前Buffer中搜索
+"  "感觉没啥用
+"  "nnoremap <silent> <Leader>p :Lines<CR>
+"  "<Leader>h在Vim打开的历史文件中搜索，相当于是在MRU中搜索，:History：命令历史查找
+"  nnoremap <silent> <Leader>h :History<CR>
+"  "<Leader>fc 在当前的git 中查找对应的git commit 信息， :Commits 命令
+"  nnoremap <silent> <Leader>fc :Commits<CR>
+"  "调用Ag实现文本搜索,需要安装Ag(the_silver_searcher)
+"  "但是目前Ag 这个命令有问题；
+"  " command! -bang -nargs=* Ag
+"  "   \ call fzf#vim#ag(<q-args>,
+"  "   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+"  "   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+"  "   \                 <bang>0)
+"  "nnoremap <silent> <Leader>A :Ag<CR>
+"  "
+""""""""""""""""""""""""ctrlp""""""""""""""""""""""""""
+"为了弥补FZF 不能用
+Plug 'ctrlpvim/ctrlp.vim'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_root_markers = ['pom.xml', '.p4ignore']
+Plug 'tacahiroy/ctrlp-funky'
+nnoremap <Leader>fu :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+let g:ctrlp_funky_syntax_highlight = 1
 """"""""""""""""""""""""indentline""""""""""""""""""""""""""
 "自动连接对齐线,连接点需要额外安装东西FontForge
 Plug 'Yggdroot/indentLine'
@@ -932,154 +1040,13 @@ Plug 'tpope/vim-commentary'
 autocmd FileType java,c,cpp,json set commentstring=//&#x5434\ %s
 
 """"""""""""""""""""""""""快速打开大文件"""""""""""""""""""""""""
-Plug 'vim-scripts/LargeFile'
+"Plug 'vim-scripts/LargeFile'
 """"""""""""""""""""""""""""""""""""""""""""""""""
 "  "需要安装nodejs,cygwin 可以共享windows 安装的node，可用命令node -v 查看版本号
 "  let g:coc_node_path = "/cygdrive/c/Program Files/nodejs/node.exe"
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}"
-"  "Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
-"  let g:coc_node_path = '/usr/local/opt/node@10/bin/node'
-"  "
-"  " TextEdit might fail if hidden is not set.
-"  set hidden
-"  " Some servers have issues with backup files, see #649.
-"  set nobackup
-"  set nowritebackup
-"  " Give more space for displaying messages.
-"  set cmdheight=2
-"  " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-"  " delays and poor user experience.
-"  set updatetime=300
-"  " Don't pass messages to |ins-completion-menu|.
-"  set shortmess+=c
-"  " Always show the signcolumn, otherwise it would shift the text each time
-"  " diagnostics appear/become resolved.
-"  set signcolumn=yes
-"  " Use tab for trigger completion with characters ahead and navigate.
-"  " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-"  " other plugin before putting this into your config.
-"  inoremap <silent><expr> <TAB>
-"              \ pumvisible() ? "\<C-n>" :
-"              \ <SID>check_back_space() ? "\<TAB>" :
-"              \ coc#refresh()
-"  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"  
-"  function! s:check_back_space() abort
-"      let col = col('.') - 1
-"      return !col || getline('.')[col - 1]  =~# '\s'
-"  endfunction
-"  
-"  " Use <c-space> to trigger completion.
-"  inoremap <silent><expr> <c-space> coc#refresh()
-"  
-"  " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-"  " position. Coc only does snippet and additional edit on confirm.
-"  if has('patch8.1.1068')
-"      " Use `complete_info` if your (Neo)Vim version supports it.
-"      inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-"  else
-"      imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"  endif
-"  
-"  " Use `[g` and `]g` to navigate diagnostics
-"  nmap <silent> [g <Plug>(coc-diagnostic-prev)
-"  nmap <silent> ]g <Plug>(coc-diagnostic-next)
-"  
-"  " GoTo code navigation.
-"  nmap <silent> gd <Plug>(coc-definition)
-"  nmap <silent> gy <Plug>(coc-type-definition)
-"  nmap <silent> gi <Plug>(coc-implementation)
-"  nmap <silent> gr <Plug>(coc-references)
-"  
-"  " Use K to show documentation in preview window.
-"  nnoremap <silent> K :call <SID>show_documentation()<CR>
-"  
-"  function! s:show_documentation()
-"      if (index(['vim','help'], &filetype) >= 0)
-"          execute 'h '.expand('<cword>')
-"      else
-"          call CocAction('doHover')
-"      endif
-"  endfunction
-"  
-"  " Highlight the symbol and its references when holding the cursor.
-"  autocmd CursorHold * silent call CocActionAsync('highlight')
-"  
-"  " Symbol renaming.
-"  nmap <leader>rn <Plug>(coc-rename)
-"  
-"  " Formatting selected code.
-"  xmap <leader>f  <Plug>(coc-format-selected)
-"  nmap <leader>f  <Plug>(coc-format-selected)
-"  
-"  augroup mygroup
-"      autocmd!
-"      " Setup formatexpr specified filetype(s).
-"      autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-"      " Update signature help on jump placeholder.
-"      autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-"  augroup end
-"  
-"  " Applying codeAction to the selected region.
-"  " Example: `<leader>aap` for current paragraph
-"  xmap <leader>a  <Plug>(coc-codeaction-selected)
-"  nmap <leader>a  <Plug>(coc-codeaction-selected)
-"  
-"  " Remap keys for applying codeAction to the current line.
-"  nmap <leader>ac  <Plug>(coc-codeaction)
-"  " Apply AutoFix to problem on the current line.
-"  nmap <leader>qf  <Plug>(coc-fix-current)
-"  
-"  " Introduce function text object
-"  " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-"  xmap if <Plug>(coc-funcobj-i)
-"  xmap af <Plug>(coc-funcobj-a)
-"  omap if <Plug>(coc-funcobj-i)
-"  omap af <Plug>(coc-funcobj-a)
-"  
-"  " Use <TAB> for selections ranges.
-"  " NOTE: Requires 'textDocument/selectionRange' support from the language server.
-"  " coc-tsserver, coc-python are the examples of servers that support it.
-"  nmap <silent> <TAB> <Plug>(coc-range-select)
-"  xmap <silent> <TAB> <Plug>(coc-range-select)
-"  
-"  " Add `:Format` command to format current buffer.
-"  command! -nargs=0 Format :call CocAction('format')
-"  
-"  " Add `:Fold` command to fold current buffer.
-"  command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-"  
-"  " Add `:OR` command for organize imports of the current buffer.
-"  command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-"  
-"  " Add (Neo)Vim's native statusline support.
-"  " NOTE: Please see `:h coc-status` for integrations with external plugins that
-"  " provide custom statusline: lightline.vim, vim-airline.
-"  set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-"  
-"  " Mappings using CoCList:
-"  " Show all diagnostics.
-"  nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-"  " Manage extensions.
-"  nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-"  " Show commands.
-"  nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-"  " Find symbol of current document.
-"  nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-"  " Search workspace symbols.
-"  nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-"  " Do default action for next item.
-"  nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-"  " Do default action for previous item.
-"  nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-"  " Resume latest coc list.
-"  nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-""""""""""""""""""""""""
-" Plug 'tacahiroy/ctrlp-funky'
-" nnoremap <Leader>fu :CtrlPFunky<Cr>
-" narrow the list down with a word under cursor
-" nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-""""""""""""""""""""""""""""""""""""""""""""""""""
+"  Plug 'neoclide/coc.nvim', {'branch': 'release'}"
+"  Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
+"  autocmd FileType json syntax match Comment +\/\/.\+$+
 """"""""""""""""""fugitive""""""""""""""""""""""""""""""""
 "airline 显示git 相关信息
 Plug 'tpope/vim-fugitive'
@@ -1126,6 +1093,8 @@ function!AirlineInit()
     let g:airline_section_z = airline#section#create_right(['%l', '%c'])
 endfunction
 "autocmd VimEnter * call AirlineInit()
+"""""""""""""""""""""""""asyncrun"""""""""""""""""""""""""
+Plug 'skywind3000/asyncrun.vim'
 
 call plug#end()
 

@@ -1057,6 +1057,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
 "显示每行修改的
 Plug 'airblade/vim-gitgutter'
+set updatetime=100
 
 """"""""""""""""""airline""""""""""""""""""""""""""""""""
 "需要先安装字体, link:  https://github.com/powerline/fonts.git 

@@ -177,8 +177,8 @@ set cinoptions={0,1s,t0,n-2,p2s,(03s,=.5s,>1s,=1s,:1s
 "------------------------------------------------------------------------------
 "  <快捷键配置>
 "------------------------------------------------------------------------------
-"自动切换目录为当前编辑文件所在目录
-au BufRead,BufNewFile,BufEnter * cd %:p:h
+"自动切换目录为当前编辑文件所在目录,但是会导致git-fugtive 等插件报错，
+"au BufRead,BufNewFile,BufEnter * cd %:p:h
 " Ctrl + K 插入模式下光标向上移动
 imap <c-k> <Up>
 " Ctrl + J 插入模式下光标向下移动
@@ -1048,11 +1048,16 @@ autocmd FileType java,c,cpp,json set commentstring=//&#x5434\ %s
 "  "需要安装nodejs,cygwin 可以共享windows 安装的node，可用命令node -v 查看版本号
 "  let g:coc_node_path = "/cygdrive/c/Program Files/nodejs/node.exe"
 "  Plug 'neoclide/coc.nvim', {'branch': 'release'}"
-"  Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
+"  "Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
 "  autocmd FileType json syntax match Comment +\/\/.\+$+
 """"""""""""""""""fugitive""""""""""""""""""""""""""""""""
 "airline 显示git 相关信息
 Plug 'tpope/vim-fugitive'
+"显示git log 相关信息
+Plug 'junegunn/gv.vim'
+"显示每行修改的
+Plug 'airblade/vim-gitgutter'
+
 """"""""""""""""""airline""""""""""""""""""""""""""""""""
 "需要先安装字体, link:  https://github.com/powerline/fonts.git 
 "显示git branch 需要fugitive plugin 
@@ -1063,9 +1068,9 @@ let g:airline_theme="powerlineish"      " 设置主题 powerlineish
 "let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
 " 开启tabline
 let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
-let g:airline#extensions#tabline#left_sep = '$'   "tabline中未激活buffer两端的分隔字符
-let g:airline#extensions#tabline#left_alt_sep = '|'      "tabline中buffer显示编号
-"let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#buffer_nr_show = 1      "tabline中buffer显示编号 
 
 let g:airline_left_sep = '»'
 let g:airline_left_sep = '▶'
@@ -1099,23 +1104,28 @@ endif
 """""""""""""""""""""""""Asyncrun"""""""""""""""""""""""""
 Plug 'skywind3000/asyncrun.vim'
 :let g:asyncrun_open = 8
-"配合airline 显示asyncrun 状态
+""""""配合airline 显示asyncrun 状态
 function!AirlineInit()
     let g:asyncrun_status = ''
     let g:airline_section_error = airline#section#create_right(['%{g:asyncrun_status}'])
 endfunction
 autocmd VimEnter * call AirlineInit()
-"寻找当前下标字符在.h/.c 文件中
+"""""定义root file 寻找规则
+let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml'] 
+"""""寻找当前下标字符在.h/.c 文件中
 if has('win32') || has('win64')
     noremap <silent><F3> :AsyncRun! -cwd=<root> findstr /n /s /C:"<C-R><C-W>" 
             \ "\%CD\%\*.h" "\%CD\%\*.c*" <cr>
 else
     noremap <silent><F3> :AsyncRun! -cwd=<root> grep -n -s -R <C-R><C-W> 
-            \ --include='*.h' --include='*.c*' '<root>' <cr>
+            \ --include='*.h' --include='*.c*' --include='*.json' '<root>' <cr>
 endif
+"""""F9 编译make，运行
+nnoremap <silent> <F9> :AsyncRun -cwd=<root> -raw make; ./%<.exe<cr>
+"还没研究
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 """""""""""""""""""""""""sprint"""""""""""""""""""""""""
-"compile and run the file with Asyncrun cmd,不过写的有点问题
+"compile and run the file with Asyncrun cmd,不过写的不适合我
 "我改了，放在setting in git
 if v:version >= 800
     Plug 'pedsm/sprint'

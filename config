@@ -6,7 +6,8 @@ Host github.com
 	IdentityFile ~/.ssh/GitCyg_id_rsa
 
 #github server two
-Host bitbucket
+Host nsg-bit.intel.com
 	Hostname nsg-bit.intel.com
 	User chunbowu 
-	IdentityFile ~/.ssh/CygBit_id_rsa
+	PreferredAuthentications publickey
+	IdentityFile ~/.ssh/BitCyg_id_rsa

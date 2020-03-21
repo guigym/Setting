@@ -474,7 +474,7 @@ func SetTitle()
             call append(line(".")+10, "#include \"".expand("%:t:r").".h\"")
         elseif expand("%:e") == 'cpp'
         "elseif &filetype == 'cpp'
-            call append(line(".")+10, "#include \"".expand("%:t:r").".h\"")
+            call append(line(".")+10, "//#include \"".expand("%:t:r").".h\"")
             call append(line(".")+11, "#include <iostream>")
             call append(line(".")+12, "using namespace std;")
             call append(line(".")+13, "int main()")
@@ -1104,7 +1104,7 @@ endif
 " autocmd VimEnter * call AirlineInit()
 """""""""""""""""""""""""Asyncrun"""""""""""""""""""""""""
 Plug 'skywind3000/asyncrun.vim'
-:let g:asyncrun_open = 8
+:let g:asyncrun_open =20 
 """"""配合airline 显示asyncrun 状态
 function!AirlineInit()
     let g:asyncrun_status = ''
@@ -1123,7 +1123,7 @@ else
 endif
 """""F9 编译make，运行
 " nnoremap <silent> <F9> :AsyncRun -cwd=<root> -raw make clean; make; ./%<.exe<cr>
-nnoremap <silent> <F9> :AsyncRun -cwd=<root> -raw make clean; make; ./*.exe<cr>
+nnoremap <silent> <F9> :AsyncRun -cwd=<root> -raw make clean ; make; echo "-----RESULT-----"; ./*.exe<cr>
 "还没研究
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 """""""""""""""""""""""""sprint"""""""""""""""""""""""""
@@ -1133,6 +1133,6 @@ if v:version >= 800
     Plug 'pedsm/sprint'
 endif
 "编译运行当前文件
-map <C-F9> : Sprint<CR>
+map <C-F9> :w!<CR>:!rm *exe <CR>:Sprint<CR>
 call plug#end()
 

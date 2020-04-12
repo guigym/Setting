@@ -109,8 +109,8 @@ endif
 "------------------------------------------------------------------------------
 "注：使用utf-8格式后，软件与程序源码、文件路径不能有中文，否则报错
 set encoding=utf-8                                    "gvim内部编码
-set fileencoding=utf-8                                "当前文件编码
 set fileencodings=ucs-bom,utf-8,gbk,cp936,gb18030,big5,euc-jp,euc-kr,latin1 "支持打开文件的编码
+set fileencoding=utf-8                                "当前文件编码
 " 文件格式，默认 ffs=dos,unix
 "set fileformat=unix
 set fileformats=dos,unix,mac
@@ -122,14 +122,13 @@ if (g:iswindows && g:isGUI)
     "解决consle输出乱码
     language messages zh_CN.utf-8
     " 设置中文帮助
-    " set helplang=cn
-    colorscheme desert                                "Gvim配色方案
-    set guifont=Lucida_Consola:h12:cANSI              "设置字体:字号（字体名称空格用下划线代替）
+    set helplang=cn
+    colorscheme desert                          "Gvim配色方案
     "快速打开vim配置文件：_vimrc
     nnoremap <leader>e :e ~/_vimrc<cr>
-
+    set langmenu=zh_CN.UTF-8 
     "个性化状态栏（这里提供两种方式，要使用其中一种去掉注释即可，不使用反之,与airline相互冲突）
-    let &statusline=' %t %{&mod?(&ro?"*":"+"):(&ro?"=":" ")} %1*|%* %{&ft==""?"any":&ft} %1*|%* %{&ff} %1*|%* %{(&fenc=="")?&enc:&fenc}%{(&bomb?",BOM":"")} %1*|%* %=%1*|%* 0x%B %1*|%* (%l,%c%V) %1*|%* %L %1*|%* %P'
+    "let &statusline=' %t %{&mod?(&ro?"*":"+"):(&ro?"=":" ")} %1*|%* %{&ft==""?"any":&ft} %1*|%* %{&ff} %1*|%* %{(&fenc=="")?&enc:&fenc}%{(&bomb?",BOM":"")} %1*|%* %=%1*|%* 0x%B %1*|%* (%l,%c%V) %1*|%* %L %1*|%* %P'
     "set statusline=%t\ %1*%m%*\ %1*%r%*\ %2*%h%*%w%=%l%3*/%L(%p%%)%*,%c%V]\ [%b:0x%B]\ [%{&ft==''?'TEXT':toupper(&ft)},%{toupper(&ff)},%{toupper(&fenc!=''?&fenc:&enc)}%{&bomb?',BOM':''}%{&eol?'':',NOEOL'}]
 else
     colorscheme desert                                "vim配色方案
@@ -219,7 +218,7 @@ set shortmess=atI                                     "去掉欢迎界面
 "winpos 1000 20                                         "指定窗口出现的位置，坐标原点在屏幕左上角
 "set lines=42 columns=190                              "指定窗口大小，lines为高度，columns为宽度
 " 设置为双字宽显示，否则无法完整显示如:☆
-" set ambiwidth=double
+set ambiwidth=double
 
 "显示/隐藏菜单栏、工具栏、滚动条，可用 Ctrl + F11 切换
 if g:isGUI
@@ -246,11 +245,6 @@ set vb t_vb=                                "关闭提示音
 set undofile 
 set undodir=~/.vim/.undodir                 "将un~ 文件都放在一个folder，可以方便恢复原来文件
 "set paste                                   "避免上面是注释，下一行还是注释,但是这个与set cindent 相互之间有冲突
-" 设置字体
-set guifont=Powerline_Consolas:h14:cANSI
-" 映射切换buffer的键位
-nnoremap [b :bp<CR>
-nnoremap ]b :bn<CR>
 
 "------------------------------------------------------------------------------
 "<多个 Tap设定>
@@ -653,180 +647,186 @@ endfunction
 
 "------------------------------------------------------------------------------
 "  < 编译、连接、运行配置 >
-"   "------------------------------------------------------------------------------
-"   " F9 一键保存、编译、连接存并运行
-"   map <F9> :call Run()<CR>
-"   imap <F9> <ESC>:call Run()<CR>
-"   
-"   " Ctrl + F9 一键保存并编译
-"   map <c-F9> :call Compile()<CR>
-"   imap <c-F9> <ESC>:call Compile()<CR>
-"   
-"   " Ctrl + F10 一键保存并连接
-"   map <c-F10> :call Link()<CR>
-"   imap <c-F10> <ESC>:call Link()<CR>
-"   
-"   let s:LastShellReturn_C = 0
-"   let s:LastShellReturn_L = 0
-"   let s:ShowWarning = 1
-"   let s:Obj_Extension = '.o'
-"   let s:Exe_Extension = '.exe'
-"   let s:Sou_Error = 0
-"   
-"   let s:windows_CFlags = 'gcc\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"   let s:linux_CFlags = 'gcc\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"   ""-Wall 是打开警告开关,-O代表默认优化,可选：-O0不优化,-O1低级优化,-O2中级优化,-O3高级优化,-Os代码空间优化.
-"   let s:windows_CPPFlags = 'g++\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"   let s:linux_CPPFlags = 'g++\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-"   
-"   func! Compile()
-"       exe ":ccl"
-"       exe ":update"
-"       if expand("%:e") == "c" || expand("%:e") == "cpp" || expand("%:e") == "cxx"
-"           let s:Sou_Error = 0
-"           let s:LastShellReturn_C = 0
-"           let Sou = expand("%:p")
-"           let Obj = expand("%:p:r").s:Obj_Extension
-"           let Obj_Name = expand("%:p:t:r").s:Obj_Extension
-"           let v:statusmsg = ''
-"           if !filereadable(Obj) || (filereadable(Obj) && (getftime(Obj) < getftime(Sou)))
-"               redraw!
-"               if expand("%:e") == "c"
-"                   if g:iswindows
-"                       exe ":setlocal makeprg=".s:windows_CFlags
-"                   else
-"                       exe ":setlocal makeprg=".s:linux_CFlags
-"                   endif
-"                   echohl WarningMsg | echo " compiling..."
-"                   silent make
-"               elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
-"                   if g:iswindows
-"                       exe ":setlocal makeprg=".s:windows_CPPFlags
-"                   else
-"                       exe ":setlocal makeprg=".s:linux_CPPFlags
-"                   endif
-"                   echohl WarningMsg | echo " compiling..."
-"                   silent make
-"               endif
-"               redraw!
-"               if v:shell_error != 0
-"                   let s:LastShellReturn_C = v:shell_error
-"               endif
-"               if g:iswindows
-"                   if s:LastShellReturn_C != 0
-"                       exe ":bo cope"
-"                       echohl WarningMsg | echo " compilation failed"
-"                   else
-"                       if s:ShowWarning
-"                           exe ":bo cw"
-"                       endif
-"                       echohl WarningMsg | echo " compilation successful"
-"                   endif
-"               else
-"                   if empty(v:statusmsg)
-"                       echohl WarningMsg | echo " compilation successful"
-"                   else
-"                       exe ":bo cope"
-"                   endif
-"               endif
-"           else
-"               echohl WarningMsg | echo ""Obj_Name"is up to date"
-"           endif
-"       else
-"           let s:Sou_Error = 1
-"           echohl WarningMsg | echo " please choose the correct source file"
-"       endif
-"       exe ":setlocal makeprg=make"
-"   endfunc
-"   
-"   func! Link()
-"       call Compile()
-"       if s:Sou_Error || s:LastShellReturn_C != 0
-"           return
-"       endif
-"       let s:LastShellReturn_L = 0
-"       let Sou = expand("%:p")
-"       let Obj = expand("%:p:r").s:Obj_Extension
-"       if g:iswindows
-"           let Exe = expand("%:p:r").s:Exe_Extension
-"           let Exe_Name = expand("%:p:t:r").s:Exe_Extension
-"       else
-"           let Exe = expand("%:p:r")
-"           let Exe_Name = expand("%:p:t:r")
-"       endif
-"       let v:statusmsg = ''
-"      if filereadable(Obj) && (getftime(Obj) >= getftime(Sou))
-"           redraw!
-"           if !executable(Exe) || (executable(Exe) && getftime(Exe) < getftime(Obj))
-"               if expand("%:e") == "c"
-"                   setlocal makeprg=gcc\ -o\ %<\ %<.o
-"                   echohl WarningMsg | echo " linking..."
-"                   silent make
-"               elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
-"                   "setlocal makeprg=g++\ ."cJSON.cpp". -o\ %<\ %<.o
-"                   setlocal makeprg=g++\ -o\ %<\ %<.o\  cJSON.o
-"                   echohl WarningMsg | echo " linking..."
-"                   silent make
-"               endif
-"               redraw!
-"               if v:shell_error != 0
-"                   let s:LastShellReturn_L = v:shell_error
-"               endif
-"               if g:iswindows
-"                   if s:LastShellReturn_L != 0
-"                       exe ":bo cope"
-"                       echohl WarningMsg | echo " linking failed"
-"                   else
-"                       if s:ShowWarning
-"                           exe ":bo cw"
-"                       endif
-"                       echohl WarningMsg | echo " linking successful"
-"                   endif
-"               else
-"                   if empty(v:statusmsg)
-"                       echohl WarningMsg | echo " linking successful"
-"                   else
-"                       exe ":bo cope"
-"                   endif
-"               endif
-"           else
-"               echohl WarningMsg | echo ""Exe_Name"is up to date"
-"           endif
-"       endif
-"       setlocal makeprg=make
-"   endfunc
-"   
-"   func! Run()
-"       let s:ShowWarning = 0
-"       call Link()
-"       let s:ShowWarning = 1
-"       if s:Sou_Error || s:LastShellReturn_C != 0 || s:LastShellReturn_L != 0
-"           return
-"       endif
-"       let Sou = expand("%:p")
-"       let Obj = expand("%:p:r").s:Obj_Extension
-"       if g:iswindows
-"           let Exe = expand("%:p:r").s:Exe_Extension
-"       else
-"           let Exe = expand("%:p:r")
-"       endif
-"       if executable(Exe) && getftime(Exe) >= getftime(Obj) && getftime(Obj) >= getftime(Sou)
-"           redraw!
-"           echohl WarningMsg | echo " running..."
-"           if g:iswindows
-"               exe ":!%<.exe"
-"           else
-"               if g:isGUI
-"                   exe ":!gnome-terminal -e ./%<"
-"               else
-"                   exe ":!./%<"
-"               endif
-"           endif
-"           redraw!
-"           echohl WarningMsg | echo " running finish"
-"       endif
-"   endfunc
+"------------------------------------------------------------------------------
+" " F9 一键保存、编译、连接存并运行
+" map <F9> :call Run()<CR>
+" imap <F9> <ESC>:call Run()<CR>
+" 
+"  " Ctrl + F9 一键保存并编译
+"  map <c-F9> :call Compile()<CR>
+"  imap <c-F9> <ESC>:call Compile()<CR>
+"  
+"  " Ctrl + F10 一键保存并连接
+"  map <c-F10> :call Link()<CR>
+"  imap <c-F10> <ESC>:call Link()<CR>
 
+let s:LastShellReturn_C = 0
+let s:LastShellReturn_L = 0
+let s:ShowWarning = 1
+let s:Obj_Extension = '.o'
+let s:Exe_Extension = '.exe'
+let s:Sou_Error = 0
+
+let s:windows_CFlags = 'gcc\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+let s:linux_CFlags = 'gcc\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+""-Wall 是打开警告开关,-O代表默认优化,可选：-O0不优化,-O1低级优化,-O2中级优化,-O3高级优化,-Os代码空间优化.
+let s:windows_CPPFlags = 'g++\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+let s:linux_CPPFlags = 'g++\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
+
+func! Compile()
+    exe ":ccl"
+    exe ":update"
+    if expand("%:e") == "c" || expand("%:e") == "cpp" || expand("%:e") == "cxx"
+        let s:Sou_Error = 0
+        let s:LastShellReturn_C = 0
+        let Sou = expand("%:p")
+        let Obj = expand("%:p:r").s:Obj_Extension
+        let Obj_Name = expand("%:p:t:r").s:Obj_Extension
+        let v:statusmsg = ''
+        if !filereadable(Obj) || (filereadable(Obj) && (getftime(Obj) < getftime(Sou)))
+            redraw!
+            if expand("%:e") == "c"
+                if g:iswindows
+                    exe ":setlocal makeprg=".s:windows_CFlags
+                else
+                    exe ":setlocal makeprg=".s:linux_CFlags
+                endif
+                echohl WarningMsg | echo " compiling..."
+                silent make
+            elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
+                if g:iswindows
+                    exe ":setlocal makeprg=".s:windows_CPPFlags
+                else
+                    exe ":setlocal makeprg=".s:linux_CPPFlags
+                endif
+                echohl WarningMsg | echo " compiling..."
+                silent make
+            endif
+            redraw!
+            if v:shell_error != 0
+                let s:LastShellReturn_C = v:shell_error
+            endif
+            if g:iswindows
+                if s:LastShellReturn_C != 0
+                    exe ":bo cope"
+                    echohl WarningMsg | echo " compilation failed"
+                else
+                    if s:ShowWarning
+                        exe ":bo cw"
+                    endif
+                    echohl WarningMsg | echo " compilation successful"
+                endif
+            else
+                if empty(v:statusmsg)
+                    echohl WarningMsg | echo " compilation successful"
+                else
+                    exe ":bo cope"
+                endif
+            endif
+        else
+            echohl WarningMsg | echo ""Obj_Name"is up to date"
+        endif
+    else
+        let s:Sou_Error = 1
+        echohl WarningMsg | echo " please choose the correct source file"
+    endif
+    exe ":setlocal makeprg=make"
+endfunc
+
+func! Link()
+    call Compile()
+    if s:Sou_Error || s:LastShellReturn_C != 0
+        return
+    endif
+    let s:LastShellReturn_L = 0
+    let Sou = expand("%:p")
+    let Obj = expand("%:p:r").s:Obj_Extension
+    if g:iswindows
+        let Exe = expand("%:p:r").s:Exe_Extension
+        let Exe_Name = expand("%:p:t:r").s:Exe_Extension
+    else
+        let Exe = expand("%:p:r")
+        let Exe_Name = expand("%:p:t:r")
+    endif
+    let v:statusmsg = ''
+   if filereadable(Obj) && (getftime(Obj) >= getftime(Sou))
+        redraw!
+        if !executable(Exe) || (executable(Exe) && getftime(Exe) < getftime(Obj))
+            if expand("%:e") == "c"
+                setlocal makeprg=gcc\ -o\ %<\ %<.o
+                echohl WarningMsg | echo " linking..."
+                silent make
+            elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
+                "setlocal makeprg=g++\  -o\ %<\ %<.o
+                setlocal makeprg=g++\ -o\ %<\ %<.o\ 
+                echohl WarningMsg | echo " linking..."
+                silent make
+            endif
+            redraw!
+            if v:shell_error != 0
+                let s:LastShellReturn_L = v:shell_error
+            endif
+            if g:iswindows
+                if s:LastShellReturn_L != 0
+                    exe ":bo cope"
+                    echohl WarningMsg | echo " linking failed"
+                else
+                    if s:ShowWarning
+                        exe ":bo cw"
+                    endif
+                    echohl WarningMsg | echo " linking successful"
+                endif
+            else
+                if empty(v:statusmsg)
+                    echohl WarningMsg | echo " linking successful"
+                else
+                    exe ":bo cope"
+                endif
+            endif
+        else
+            echohl WarningMsg | echo ""Exe_Name"is up to date"
+        endif
+    endif
+    setlocal makeprg=make
+endfunc
+
+func! Run()
+    let s:ShowWarning = 0
+    call Link()
+    let s:ShowWarning = 1
+    if s:Sou_Error || s:LastShellReturn_C != 0 || s:LastShellReturn_L != 0
+        return
+    endif
+    let Sou = expand("%:p")
+    let Obj = expand("%:p:r").s:Obj_Extension
+    if g:iswindows
+        let Exe = expand("%:p:r").s:Exe_Extension
+    else
+        let Exe = expand("%:p:r")
+    endif
+    if executable(Exe) && getftime(Exe) >= getftime(Obj) && getftime(Obj) >= getftime(Sou)
+        redraw!
+        echohl WarningMsg | echo " running..."
+        if g:iswindows
+            exe ":!%<.exe"
+        else
+            if g:isGUI
+                exe ":!gnome-terminal -e ./%<"
+            else
+                exe ":!./%<"
+            endif
+        endif
+        redraw!
+        echohl WarningMsg | echo " running finish"
+    endif
+endfunc
+
+
+"""""""""""""""""""""""""JSON FORMAT"""""""""""""""""""""""""
+command! JsonFormat :execute '%!python -m json.tool'
+  \ | :execute '%!python -c "import re,sys;chr=__builtins__.__dict__.get(\"unichr\", chr);sys.stdout.write(re.sub(r\"\\u[0-9a-f]{4}\", lambda x: chr(int(\"0x\" + x.group(0)[2:], 16)).encode(\"utf-8\"), sys.stdin.read()))"'
+  \ | :set ft=javascript
+  \ | :1 
 "==============================插件安装===============================
 call plug#begin('~/.vim/plugged')
 """""""""""""""""""""""""vim-bookmark"""""""""""""""""""""""""
@@ -843,14 +843,15 @@ nmap <Leader>kk <Plug>BookmarkMoveUp
 nmap <Leader>jj <Plug>BookmarkMoveDown
 nmap <Leader>g <Plug>BookmarkMoveToLine
 
-
-let g:bookmark_sign = '♥'
-let g:bookmark_annotation_sign = '>>'
-let g:bookmark_auto_close = 0     "打开书签后是否关闭quickfix
-"""add the color for the bookmark //尝试很多，windows gvim 版本下并不work
-let g:bookmark_highlight_lines = 1
-let g:bookmark_no_default_key_mappings = 1
-let g:bookmark_center = 1
+if (!g:iswindows) 
+    let g:bookmark_sign = '♥'
+    let g:bookmark_annotation_sign = '>>'
+    let g:bookmark_auto_close = 0     "打开书签后是否关闭quickfix
+    """add the color for the bookmark //尝试很多，windows gvim 版本下并不work
+    let g:bookmark_highlight_lines = 1
+    let g:bookmark_no_default_key_mappings = 1
+    let g:bookmark_center = 1
+endif
 "!!!!!!!!!!!Below information MUST!! put in the colorscheme files!!!!!
 "!!!!!!!!!!!Below just for references
 highlight BookmarkLine ctermbg=DarkGray ctermfg=none guibg=darkgreen  guifg=palegreen
@@ -943,30 +944,31 @@ let Tlist_Auto_Update             = 1    " 自动更新
 " <leader>tl 打开 Tlist 窗口，在左侧栏显示
 map <leader>tl :TlistToggle<CR>
 ""  """"""""""""""""""""""""fzf""""""""""""""""""""""""""
-""  "windows 可以使用powershell 命令行安装(admin):choco install fzf, 不过效果不行，还是用ctrlp
-""  "也可以去下载release 的 windows 版本
-"  Plug 'junegunn/fzf', { 'do': './install --bin' }
-"  Plug 'junegunn/fzf.vim'
-"  "<Leader>ff在当前目录搜索文件
-"  nnoremap <silent> <Leader>ff :Files<CR>
-"  "<Leader>b切换Buffer中的文件
-"  nnoremap <silent> <Leader>b :Buffers<CR>
-"  "<Leader>p在当前所有加载的Buffer中搜索包含目标词的所有行，:BLines只在当前Buffer中搜索
-"  "感觉没啥用
-"  "nnoremap <silent> <Leader>p :Lines<CR>
-"  "<Leader>h在Vim打开的历史文件中搜索，相当于是在MRU中搜索，:History：命令历史查找
-"  nnoremap <silent> <Leader>h :History<CR>
-"  "<Leader>fc 在当前的git 中查找对应的git commit 信息， :Commits 命令
-"  nnoremap <silent> <Leader>fc :Commits<CR>
-"  "调用Ag实现文本搜索,需要安装Ag(the_silver_searcher)
-"  "但是目前Ag 这个命令有问题；
-"  " command! -bang -nargs=* Ag
-"  "   \ call fzf#vim#ag(<q-args>,
-"  "   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-"  "   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-"  "   \                 <bang>0)
-"  "nnoremap <silent> <Leader>A :Ag<CR>
-"  "
+if (g:iswindows && g:isGUI)
+"windows 可以使用powershell 命令行安装(admin):choco install fzf, 不过效果不行，还是用ctrlp
+ "也可以去下载release 的 windows 版本
+Plug 'junegunn/fzf', { 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+"<Leader>ff在当前目录搜索文件
+nnoremap <silent> <Leader>ff :Files<CR>
+"<Leader>b切换Buffer中的文件
+nnoremap <silent> <Leader>b :Buffers<CR>
+"<Leader>p在当前所有加载的Buffer中搜索包含目标词的所有行，:BLines只在当前Buffer中搜索
+"感觉没啥用
+"nnoremap <silent> <Leader>p :Lines<CR>
+"<Leader>h在Vim打开的历史文件中搜索，相当于是在MRU中搜索，:History：命令历史查找
+nnoremap <silent> <Leader>h :History<CR>
+"<Leader>fc 在当前的git 中查找对应的git commit 信息， :Commits 命令
+nnoremap <silent> <Leader>fc :Commits<CR>
+"调用Ag实现文本搜索,需要安装Ag(the_silver_searcher)
+"但是目前Ag 这个命令有问题；
+" command! -bang -nargs=* Ag
+"   \ call fzf#vim#ag(<q-args>,
+"   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+"   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+"   \                 <bang>0)
+"nnoremap <silent> <Leader>A :Ag<CR>
+else
 """"""""""""""""""""""""ctrlp""""""""""""""""""""""""""
 "为了弥补FZF 不能用
 Plug 'ctrlpvim/ctrlp.vim'
@@ -978,6 +980,7 @@ nnoremap <Leader>fu :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_syntax_highlight = 1
+endif
 """"""""""""""""""""""""indentline""""""""""""""""""""""""""
 "自动连接对齐线,连接点需要额外安装东西FontForge
 Plug 'Yggdroot/indentLine'
@@ -1046,10 +1049,158 @@ autocmd FileType java,c,cpp,json set commentstring=//&#x5434\ %s
 "Plug 'vim-scripts/LargeFile'
 """"""""""""""""""""""""""""""""""""""""""""""""""
 "  "需要安装nodejs,cygwin 可以共享windows 安装的node，可用命令node -v 查看版本号
-"  let g:coc_node_path = "/cygdrive/c/Program Files/nodejs/node.exe"
-"  Plug 'neoclide/coc.nvim', {'branch': 'release'}"
-"  "Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
-"  autocmd FileType json syntax match Comment +\/\/.\+$+
+if (g:iswindows && g:isGUI)
+    " let g:coc_node_path = "/cygdrive/c/Program Files/nodejs/node.exe"
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}"
+    ""Plug 'neoclide/coc.nvim', {'do': 'yarn instal:l --frozen-lockfile'}
+    autocmd FileType json syntax match Comment +\/\/.\+$+
+    
+    " TextEdit might fail if hidden is not set.
+    set hidden
+    " Some servers have issues with backup files, see #649.
+    set nobackup
+    set nowritebackup
+    " Give more space for displaying messages.
+    set cmdheight=2
+    
+    " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+    " delays and poor user experience.
+    set updatetime=300
+    
+    " Don't pass messages to |ins-completion-menu|.
+    set shortmess+=c
+    
+    " Always show the signcolumn, otherwise it would shift the text each time
+    " diagnostics appear/become resolved.
+    set signcolumn=yes
+    
+    " Use tab for trigger completion with characters ahead and navigate.
+    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " other plugin before putting this into your config.
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+    
+    " Use <c-space> to trigger completion.
+    inoremap <silent><expr> <c-space> coc#refresh()
+    
+    " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+    " position. Coc only does snippet and additional edit on confirm.
+    if exists('*complete_info')
+      inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+    else
+      imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    endif
+    
+    " Use `[g` and `]g` to navigate diagnostics
+    nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]g <Plug>(coc-diagnostic-next)
+    
+    " GoTo code navigation.
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+    
+    " Use K to show documentation in preview window.
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
+    
+    function! s:show_documentation()
+      if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+      else
+        call CocAction('doHover')
+      endif
+    endfunction
+    
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+    
+    " Symbol renaming.
+    nmap <leader>rn <Plug>(coc-rename)
+    
+    " Formatting selected code.
+    xmap <leader>f  <Plug>(coc-format-selected)
+    nmap <leader>f  <Plug>(coc-format-selected)
+    
+    augroup mygroup
+      autocmd!
+      " Setup formatexpr specified filetype(s).
+      autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+      " Update signature help on jump placeholder.
+      autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    augroup end
+    
+    " Applying codeAction to the selected region.
+    " Example: `<leader>aap` for current paragraph
+    xmap <leader>a  <Plug>(coc-codeaction-selected)
+    nmap <leader>a  <Plug>(coc-codeaction-selected)
+    
+    " Remap keys for applying codeAction to the current line.
+    nmap <leader>ac  <Plug>(coc-codeaction)
+    " Apply AutoFix to problem on the current line.
+    nmap <leader>qf  <Plug>(coc-fix-current)
+    
+    " Introduce function text object
+    " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+    xmap if <Plug>(coc-funcobj-i)
+    xmap af <Plug>(coc-funcobj-a)
+    omap if <Plug>(coc-funcobj-i)
+    omap af <Plug>(coc-funcobj-a)
+    
+    " Use <TAB> for selections ranges.
+    " NOTE: Requires 'textDocument/selectionRange' support from the language server.
+    " coc-tsserver, coc-python are the examples of servers that support it.
+    nmap <silent> <TAB> <Plug>(coc-range-select)
+    xmap <silent> <TAB> <Plug>(coc-range-select)
+    
+    " Add `:Format` command to format current buffer.
+    command! -nargs=0 Format :call CocAction('format')
+    
+    " Add `:Fold` command to fold current buffer.
+    command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+    
+    " Add `:OR` command for organize imports of the current buffer.
+    command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+    
+    " Add (Neo)Vim's native statusline support.
+    " NOTE: Please see `:h coc-status` for integrations with external plugins that
+    " provide custom statusline: lightline.vim, vim-airline.
+    set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+    
+    " Mappings using CoCList:
+    " Show all diagnostics.
+    nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+    " Manage extensions.
+    nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+    " Show commands.
+    nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+    " Find symbol of current document.
+    nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+    " Search workspace symbols.
+    nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+    " Do default action for next item.
+    nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+    " Do default action for previous item.
+    nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+    " Resume latest coc list.
+    nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+""""""""""""""""""colorscheme: (solarized for windows """"""""""""""""""""""""""""""""
+    Plug 'altercation/vim-colors-solarized'
+    " colorscheme solarized
+    Plug 'morhetz/gruvbox'
+    colorscheme gruvbox
+    set background=dark    " Setting dark mode
+
+endif
 """"""""""""""""""fugitive""""""""""""""""""""""""""""""""
 "airline 显示git 相关信息
 Plug 'tpope/vim-fugitive'
@@ -1061,47 +1212,67 @@ set updatetime=100
 
 """"""""""""""""""airline""""""""""""""""""""""""""""""""
 "需要先安装字体, link:  https://github.com/powerline/fonts.git 
+"windows 下面可以安装字体，还可以丰富console 支持字体https://github.com/crvdgc/Consolas-with-Yahei  ; 
 "显示git branch 需要fugitive plugin 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+if (g:iswindows && g:isGUI)
+    "这个是安装字体后 必须设置此项" 
+    let g:airline_powerline_fonts = 1   
+    let g:airline_theme="molokai" 
+    "打开tabline功能,方便查看Buffer和切换,省去了minibufexpl插件
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#left_sep= ' ' 
+    let g:airline#extensions#tabline#left_alt_sep= '|' 
+    let g:airline#extensions#tabline#buffer_nr_show = 1
+    " 关闭状态显示空白符号计数
+    let g:airline#extensions#whitespace#enabled = 0
+    let g:airline#extensions#whitespace#symbol = '!'
+    " 去掉最后的显示
+    let g:airline_skip_empty_sections = 1
+    set guifont=DejaVu_Sans_Mono_for_Powerline:h10:cANSI   "console for pwoerline 并不work
+    "字体DejaVu Sans Mono for Powerline，需放在配置文件最后面 
+    let g:airline#extensions#bookmark#enabled = 1
+else
+    let g:airline_theme="powerlineish"      " 设置主题 powerlineish
+    let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
+    " 开启tabline
+    let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
+    let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
+    "let g:airline#extensions#tabline#left_alt_sep = '|'
+    let g:airline#extensions#tabline#buffer_nr_show = 1      "tabline中buffer显示编号 
+    
+    let g:airline_left_sep = '»'
+    let g:airline_left_sep = '▶'
+    let g:airline_right_sep = '«'
+    let g:airline_right_sep = '◀'
+    
+        "let g:airline_section_b='%{strftime("%c")}'   "使用时显示当前时间
+        "let g:airline_section_y='BN:%{bufnr("%")}'  "右下角显示bffer序号
+    
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+        let g:airline_symbols.linenr = '¶'
+        let g:airline_symbols.maxlinenr = '㏑'
+        let g:airline_symbols.branch = '⎇'
+        " let g:airline_symbols.crypt = '🔒'
+        " let g:airline_symbols.paste = 'ρ'
+        " let g:airline_symbols.spell = 'Ꞩ'
+        " let g:airline_symbols.notexists = 'Ɇ'
+        " let g:airline_symbols.whitespace = 'Ξ'
+    endif
+    "!!!!! 文件定义在autoload/airline/init.
+    " function!AirlineInit()
+    "     let g:airline_section_a = airline#section#create(['mode',' ','branch'])
+    "     let g:airline_section_b = airline#section#create_left(['ffenc','%f'])
+    "     let g:airline_section_c = airline#section#create(['filetype'])
+    "     let g:airline_section_x = airline#section#create(['%P'])
+    "     let g:airline_section_y = airline#section#create(['%B'])
+    "     let g:airline_section_z = airline#section#create_right(['%l', '%c'])
+    " endfunction
+    " autocmd VimEnter * call AirlineInit()
 
-let g:airline_theme="powerlineish"      " 设置主题 powerlineish
-"let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
-" 开启tabline
-let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
-let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
-"let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#buffer_nr_show = 1      "tabline中buffer显示编号 
-
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-
-    "let g:airline_section_b='%{strftime("%c")}'   "使用时显示当前时间
-    "let g:airline_section_y='BN:%{bufnr("%")}'  "右下角显示bffer序号
-
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-    let g:airline_symbols.linenr = '¶'
-    let g:airline_symbols.maxlinenr = '㏑'
-    let g:airline_symbols.branch = '⎇'
-    " let g:airline_symbols.crypt = '🔒'
-    " let g:airline_symbols.paste = 'ρ'
-    " let g:airline_symbols.spell = 'Ꞩ'
-    " let g:airline_symbols.notexists = 'Ɇ'
-    " let g:airline_symbols.whitespace = 'Ξ'
 endif
-"!!!!! 文件定义在autoload/airline/init.
-" function!AirlineInit()
-"     let g:airline_section_a = airline#section#create(['mode',' ','branch'])
-"     let g:airline_section_b = airline#section#create_left(['ffenc','%f'])
-"     let g:airline_section_c = airline#section#create(['filetype'])
-"     let g:airline_section_x = airline#section#create(['%P'])
-"     let g:airline_section_y = airline#section#create(['%B'])
-"     let g:airline_section_z = airline#section#create_right(['%l', '%c'])
-" endfunction
-" autocmd VimEnter * call AirlineInit()
 """""""""""""""""""""""""Asyncrun"""""""""""""""""""""""""
 Plug 'skywind3000/asyncrun.vim'
 :let g:asyncrun_open =20 
@@ -1122,17 +1293,32 @@ else
             \ --include='*.h' --include='*.c*' --include='*.json' --include='*.py' '<root>' <cr>
 endif
 """""F9 编译make，运行
-" nnoremap <silent> <F9> :AsyncRun -cwd=<root> -raw make clean; make; ./%<.exe<cr>
-nnoremap <silent> <F9> :AsyncRun -cwd=<root> -raw make clean ; make; echo "-----RESULT-----"; ./*.exe<cr>
+if (g:iswindows && g:isGUI)
+    nnoremap <silent> <F9> :AsyncRun! ./make.bat<cr>
+    " F9 一键保存、编译、连接存并运行
+    "map <C-F9> :w!<CR>:call Run()<CR>
+    nnoremap <silent> <C-F9> :w!<cr>:AsyncRun g++ -Wall -O3 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<cr>
+    nnoremap <silent> <C-F10> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
+endif
 "还没研究
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
-"""""""""""""""""""""""""sprint"""""""""""""""""""""""""
+let g:asyncrun_last = 1
+"""""""""""""""""""""""""sprint""""""""""""""""""""""""""
 "compile and run the file with Asyncrun cmd,不过写的不适合我
 "我改了，放在setting in git
-if v:version >= 800
-    Plug 'pedsm/sprint'
-endif
 "编译运行当前文件
-map <C-F9> :w!<CR>:!rm *exe <CR>:Sprint<CR>
+if (g:iswindows && g:isGUI)
+else
+    if v:version >= 800
+        Plug 'pedsm/sprint'
+    endif
+    map <C-F9> :w!<CR>:!rm *exe <CR>:Sprint<CR>
+endif
+"""""""""""""""""""""""""json format highlight"""""""""""""""""""""""""
+Plug 'elzr/vim-json'
+let g:vim_json_syntax_conceal = 0
+"""""""""""""""""""""""""json format highlight"""""""""""""""""""""""""
+Plug 'tpope/vim-jdaddy'
+
 call plug#end()
 
